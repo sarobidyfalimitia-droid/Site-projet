@@ -24,7 +24,7 @@ Après le redémarrage de VS Code:
 
 ### Sélectionner le modèle:
 - Dans le chat Continue, cliquez sur le sélecteur de modèle
-- Sélectionnez **"DeepSeek-Coder (Official API)"**
+- Sélectionnez **"DeepSeek-V4-Flash (Official API)"** (recommandé)
 
 ### Commandes disponibles:
 - `/test` - Génère des tests pour le code sélectionné
@@ -46,9 +46,8 @@ Puis sélectionnez **"DeepSeek-Coder (Ollama Local)"** dans Continue.
 ## 5. Vérification
 
 Si tout est bien configuré, vous verrez les modèles disponibles dans Continue:
-- DeepSeek-Coder (Official API)
-- DeepSeek-Coder-V2 (Official API)
-- DeepSeek-Chat (Official API)
+- DeepSeek-V4-Flash (Official API)
+- DeepSeek-V4-Pro (Official API)
 - DeepSeek-Coder (Ollama Local)
 
 ## Support
