@@ -1,0 +1,199 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id               Int      @id @default(autoincrement())
+  email            String   @unique
+  password         String
+  refreshToken     String?
+  twoFactorEnabled Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime
+}
+
+model Appointment {
+  id          Int               @id @default(autoincrement())
+  clientId    Int?
+  subject     String
+  description String
+  scheduledAt DateTime
+  status      AppointmentStatus @default(PENDING)
+  meetingUrl  String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime
+  Client      Client?           @relation(fields: [clientId], references: [id])
+}
+
+model BlogPost {
+  id          Int       @id @default(autoincrement())
+  title       String
+  slug        String    @unique
+  excerpt     String
+  content     String
+  coverImage  String?
+  tags        String[]
+  published   Boolean   @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime
+}
+
+model Category {
+  id      Int       @id @default(autoincrement())
+  name    String    @unique
+  slug    String    @unique
+  Project Project[]
+}
+
+model Client {
+  id           Int           @id @default(autoincrement())
+  name         String
+  company      String?
+  email        String        @unique
+  phone        String?
+  password     String?
+  refreshToken String?
+  status       String        @default("active")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime
+  Appointment  Appointment[]
+  Contract     Contract[]
+  Invoice      Invoice[]
+  Project      Project[]
+  Quote        Quote[]
+}
+
+model Contract {
+  id          Int            @id @default(autoincrement())
+  title       String
+  description String
+  clientId    Int?
+  quoteId     Int?
+  startDate   DateTime?
+  endDate     DateTime?
+  status      ContractStatus @default(DRAFT)
+  pdfUrl      String?
+  signedAt    DateTime?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime
+  Client      Client?        @relation(fields: [clientId], references: [id])
+  Quote       Quote?         @relation(fields: [quoteId], references: [id])
+}
+
+model Invoice {
+  id        Int           @id @default(autoincrement())
+  quoteId   Int?
+  clientId  Int?
+  number    String        @unique
+  amount    Float
+  dueDate   DateTime
+  status    InvoiceStatus @default(PENDING)
+  pdfUrl    String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime
+  Client    Client?       @relation(fields: [clientId], references: [id])
+  Quote     Quote?        @relation(fields: [quoteId], references: [id])
+}
+
+model Project {
+  id           Int      @id @default(autoincrement())
+  title        String
+  slug         String   @unique
+  excerpt      String
+  description  String
+  coverImage   String
+  images       String[]
+  liveUrl      String?
+  githubUrl    String?
+  technologies String[]
+  published    Boolean  @default(false)
+  featured     Boolean  @default(false)
+  realizedAt   DateTime
+  categoryId   Int
+  clientId     Int?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime
+  Category     Category @relation(fields: [categoryId], references: [id])
+  Client       Client?  @relation(fields: [clientId], references: [id])
+}
+
+model Quote {
+  id           Int         @id @default(autoincrement())
+  title        String
+  description  String
+  budgetRange  String?
+  deadline     DateTime?
+  status       QuoteStatus @default(PENDING)
+  clientId     Int?
+  contactName  String?
+  contactEmail String?
+  contactPhone String?
+  company      String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime
+  Contract     Contract[]
+  Invoice      Invoice[]
+  Client       Client?     @relation(fields: [clientId], references: [id])
+}
+
+model TeamMember {
+  id           Int      @id @default(autoincrement())
+  name         String
+  role         String
+  bio          String
+  photo        String
+  skills       String[]
+  socials      String[]
+  portfolioUrl String?
+  featured     Boolean  @default(false)
+  published    Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime
+}
+
+model Testimonial {
+  id         Int      @id @default(autoincrement())
+  clientName String
+  company    String?
+  role       String?
+  quote      String
+  rating     Int      @default(5)
+  published  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime
+}
+
+enum QuoteStatus {
+  DRAFT
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum InvoiceStatus {
+  DRAFT
+  PENDING
+  SENT
+  PAID
+  OVERDUE
+}
+
+enum ContractStatus {
+  DRAFT
+  SENT
+  SIGNED
+  CANCELLED
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+}
