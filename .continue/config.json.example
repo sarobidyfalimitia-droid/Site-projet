@@ -1,28 +1,20 @@
 {
   "models": [
     {
-      "title": "DeepSeek-Coder (Official API)",
+      "title": "DeepSeek-V4-Flash (Official API)",
       "provider": "openai",
-      "model": "deepseek-coder",
+      "model": "deepseek-v4-flash",
       "apiKey": "DEEPSEEK_API_KEY",
       "apiBase": "https://api.deepseek.com/v1",
       "contextLength": 128000
     },
     {
-      "title": "DeepSeek-Coder-V2 (Official API)",
+      "title": "DeepSeek-V4-Pro (Official API)",
       "provider": "openai",
-      "model": "deepseek-coder-v2",
+      "model": "deepseek-v4-pro",
       "apiKey": "DEEPSEEK_API_KEY",
       "apiBase": "https://api.deepseek.com/v1",
       "contextLength": 128000
-    },
-    {
-      "title": "DeepSeek-Chat (Official API)",
-      "provider": "openai",
-      "model": "deepseek-chat",
-      "apiKey": "DEEPSEEK_API_KEY",
-      "apiBase": "https://api.deepseek.com/v1",
-      "contextLength": 32000
     },
     {
       "title": "DeepSeek-Coder (Ollama Local)",
@@ -41,6 +33,6 @@
       "prompt": "Generate documentation for the selected code. Include JSDoc comments and usage examples."
     }
   ],
-  "tabAutocompleteModel": "DeepSeek-Coder (Official API)",
+  "tabAutocompleteModel": "DeepSeek-V4-Flash (Official API)",
   "embeddingsProvider": "openai"
 }
