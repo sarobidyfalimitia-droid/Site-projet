@@ -1,0 +1,46 @@
+{
+  "models": [
+    {
+      "title": "DeepSeek-Coder (Official API)",
+      "provider": "openai",
+      "model": "deepseek-coder",
+      "apiKey": "DEEPSEEK_API_KEY",
+      "apiBase": "https://api.deepseek.com/v1",
+      "contextLength": 128000
+    },
+    {
+      "title": "DeepSeek-Coder-V2 (Official API)",
+      "provider": "openai",
+      "model": "deepseek-coder-v2",
+      "apiKey": "DEEPSEEK_API_KEY",
+      "apiBase": "https://api.deepseek.com/v1",
+      "contextLength": 128000
+    },
+    {
+      "title": "DeepSeek-Chat (Official API)",
+      "provider": "openai",
+      "model": "deepseek-chat",
+      "apiKey": "DEEPSEEK_API_KEY",
+      "apiBase": "https://api.deepseek.com/v1",
+      "contextLength": 32000
+    },
+    {
+      "title": "DeepSeek-Coder (Ollama Local)",
+      "provider": "ollama",
+      "model": "deepseek-coder",
+      "apiBase": "http://localhost:11434"
+    }
+  ],
+  "customCommands": [
+    {
+      "name": "test",
+      "prompt": "Write a comprehensive test for the selected code. Use Jest for unit tests and React Testing Library for components."
+    },
+    {
+      "name": "doc",
+      "prompt": "Generate documentation for the selected code. Include JSDoc comments and usage examples."
+    }
+  ],
+  "tabAutocompleteModel": "DeepSeek-Coder (Official API)",
+  "embeddingsProvider": "openai"
+}
