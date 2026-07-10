@@ -139,22 +139,20 @@ export default function Navbar() {
               Mon espace
             </Link>
           ) : (
-            !isHomePage && (
-              <>
-                <Link
-                  href="/auth/login"
-                  className="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                >
-                  Connexion
-                </Link>
-                <Link
-                  href={quoteHref}
-                  className="hidden md:inline-flex btn-primary text-sm"
-                >
-                  Demander un devis
-                </Link>
-              </>
-            )
+            <>
+              <Link
+                href="/auth/login"
+                className="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              >
+                Connexion
+              </Link>
+              <Link
+                href={quoteHref}
+                className="hidden md:inline-flex btn-primary text-sm"
+              >
+                Demander un devis
+              </Link>
+            </>
           )}
 
           <button
@@ -208,24 +206,22 @@ export default function Navbar() {
                   </Link>
                 )
               )}
-              {!isHomePage && (
-                <div className="pt-3 border-t border-gray-200 dark:border-gray-800 mt-2 flex flex-col gap-2">
-                  {isAuthenticated ? (
-                    <Link href={dashboardHref} onClick={() => setOpen(false)} className="btn-primary text-center">
-                      Mon espace
+              <div className="pt-3 border-t border-gray-200 dark:border-gray-800 mt-2 flex flex-col gap-2">
+                {isAuthenticated ? (
+                  <Link href={dashboardHref} onClick={() => setOpen(false)} className="btn-primary text-center">
+                    Mon espace
+                  </Link>
+                ) : (
+                  <>
+                    <Link href="/auth/login" onClick={() => setOpen(false)} className="px-4 py-2 text-center text-sm font-medium text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                      Connexion
                     </Link>
-                  ) : (
-                    <>
-                      <Link href="/auth/login" onClick={() => setOpen(false)} className="px-4 py-2 text-center text-sm font-medium text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                        Connexion
-                      </Link>
-                      <Link href={quoteHref} onClick={() => setOpen(false)} className="btn-primary text-center">
-                        Demander un devis
-                      </Link>
-                    </>
-                  )}
-                </div>
-              )}
+                    <Link href={quoteHref} onClick={() => setOpen(false)} className="btn-primary text-center">
+                      Demander un devis
+                    </Link>
+                  </>
+                )}
+              </div>
             </div>
           </motion.div>
         )}

@@ -56,32 +56,24 @@ export default function HeroSection() {
           </motion.p>
 
           {/* CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.35 }}
-            className="flex flex-wrap gap-4 mb-16"
-          >
-            <Link href={quoteHref} className="btn-primary flex items-center gap-2 text-base px-6 py-3">
-              Démarrer un projet
-              <ArrowRight size={18} />
-            </Link>
-            {!isAuthenticated && (
-              <Link
-                href="/auth/login"
-                className="flex items-center gap-2 px-6 py-3 rounded-xl text-base font-medium text-white bg-gray-900 hover:bg-gray-700 transition-all"
-              >
-                Connexion
-              </Link>
-            )}
-            <Link
-              href="/projets"
-              className="flex items-center gap-2 px-6 py-3 rounded-xl text-base font-medium text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all"
-            >
-              <Play size={16} />
-              Voir nos réalisations
-            </Link>
-          </motion.div>
+           <motion.div
+             initial={{ opacity: 0, y: 20 }}
+             animate={{ opacity: 1, y: 0 }}
+             transition={{ duration: 0.5, delay: 0.35 }}
+             className="flex flex-wrap gap-4 mb-16"
+           >
+             <Link href={quoteHref} className="btn-primary flex items-center gap-2 text-base px-6 py-3">
+               Démarrer un projet
+               <ArrowRight size={18} />
+             </Link>
+             <Link
+               href="/projets"
+               className="flex items-center gap-2 px-6 py-3 rounded-xl text-base font-medium text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all"
+             >
+               <Play size={16} />
+               Voir nos réalisations
+             </Link>
+           </motion.div>
 
           {/* Tech stack */}
           <motion.div
