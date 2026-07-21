@@ -116,7 +116,7 @@ export default function HeroSection() {
             </div>
             <div className="font-mono text-xs space-y-1.5 text-gray-600 dark:text-gray-400">
               <p><span className="text-primary-500">const</span> <span className="text-green-500">project</span> = {'{'}</p>
-              <p className="pl-4"><span className="text-yellow-500">name</span>: <span className="text-orange-400">&quot;Votre App&quot;</span>,</p>
+              <p className="pl-4"><span className="text-yellow-500">name</span>: <span className="text-orange-400">&quot;Techno-logia&quot;</span>,</p>
               <p className="pl-4"><span className="text-yellow-500">tech</span>: <span className="text-orange-400">&quot;Next.js&quot;</span>,</p>
               <p className="pl-4"><span className="text-yellow-500">status</span>: <span className="text-green-400">✓ deployed</span>,</p>
               <p>{'}'}</p>

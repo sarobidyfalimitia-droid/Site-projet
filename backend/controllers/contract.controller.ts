@@ -1,10 +1,19 @@
 import { Request, Response } from 'express'
 import prisma from '../lib/prisma'
 import { contractSchema } from '../validators/contract.validator'
+import { getPaginationParams, paginatedResponse } from '../src/utils/pagination'
 
-export const getContracts = async (_req: Request, res: Response) => {
-    const contracts = await prisma.contract.findMany({ orderBy: { updatedAt: 'desc' }, include: { client: true, quote: true } })
-    res.json(contracts)
+export const getContracts = async (req: Request, res: Response) => {
+    const pagination = getPaginationParams(req)
+    const where = pagination.search
+        ? { OR: [{ title: { contains: pagination.search, mode: 'insensitive' as const } }, { client: { name: { contains: pagination.search, mode: 'insensitive' as const } } }] }
+        : {}
+
+    const [contracts, total] = await Promise.all([
+        prisma.contract.findMany({ where, orderBy: { updatedAt: 'desc' }, include: { client: true, quote: true }, skip: pagination.skip, take: pagination.limit }),
+        prisma.contract.count({ where }),
+    ])
+    res.json(paginatedResponse(contracts, total, pagination))
 }
 
 export const getContract = async (req: Request, res: Response) => {

@@ -51,7 +51,7 @@ export async function generateInvoicePdf(invoice: InvoiceWithClient): Promise<st
     // Items
     const items = (invoice.items as InvoiceWithClient['items']) ?? []
     let y = tableTop + 36
-    items.forEach((item, i) => {
+    items.forEach((item: { description: string; quantity: number; unitPrice: number; total: number }, i: number) => {
       if (i % 2 === 0) doc.rect(50, y - 4, 495, 24).fill('#FAFAFA')
       doc.fontSize(10).fillColor('#374151')
         .text(item.description, 60, y)

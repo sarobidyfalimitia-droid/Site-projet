@@ -59,9 +59,15 @@ app.use('/api', limiter)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
   message: { error: 'Trop de tentatives, réessayez plus tard.' },
 })
-app.use('/api/auth', authLimiter)
+app.use('/api/auth/login', authLimiter)
+app.use('/api/auth/register', authLimiter)
+app.use('/api/auth/register/verify', authLimiter)
+app.use('/api/auth/forgot-password', authLimiter)
+app.use('/api/auth/reset-password', authLimiter)
 
 // Static files
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')))

@@ -39,6 +39,8 @@ export function useProjects(filters?: ProjectFilters) {
     queryKey: queryKeys.projects(filters),
     queryFn: () => projectsService.getAll(filters),
     placeholderData: keepPreviousData,
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
   })
 }
 
@@ -47,6 +49,7 @@ export function useProject(slug: string) {
     queryKey: queryKeys.project(slug),
     queryFn: () => projectsService.getBySlug(slug),
     enabled: !!slug,
+    staleTime: 60_000,
   })
 }
 
@@ -54,6 +57,7 @@ export function useFeaturedProjects() {
   return useQuery({
     queryKey: queryKeys.projects({ featured: true }),
     queryFn: () => projectsService.getFeatured(),
+    staleTime: 5 * 60_000,
   })
 }
 
@@ -99,7 +103,8 @@ export function useCategories() {
   return useQuery({
     queryKey: queryKeys.categories(),
     queryFn: categoriesService.getAll,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false,
   })
 }
 
@@ -137,6 +142,8 @@ export function useClients(params?: object) {
     queryKey: queryKeys.clients(params),
     queryFn: () => clientsService.getAll(params as Record<string, unknown>),
     placeholderData: keepPreviousData,
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
   })
 }
 
@@ -182,6 +189,8 @@ export function useQuotes(params?: object) {
     queryKey: queryKeys.quotes(params),
     queryFn: () => quotesService.getAll(params as Record<string, unknown>),
     placeholderData: keepPreviousData,
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
   })
 }
 
@@ -218,6 +227,8 @@ export function useInvoices(params?: object) {
     queryKey: queryKeys.invoices(params),
     queryFn: () => invoicesService.getAll(params as Record<string, unknown>),
     placeholderData: keepPreviousData,
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
   })
 }
 
@@ -244,6 +255,8 @@ export function useContracts(params?: object) {
     queryKey: queryKeys.contracts(params),
     queryFn: () => contractsService.getAll(params as Record<string, unknown>),
     placeholderData: keepPreviousData,
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
   })
 }
 
@@ -262,6 +275,8 @@ export function useAppointments(params?: object) {
     queryKey: queryKeys.appointments(params),
     queryFn: () => appointmentsService.getAll(params as Record<string, unknown>),
     placeholderData: keepPreviousData,
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
   })
 }
 
@@ -289,6 +304,8 @@ export function useTeam(params?: object) {
   return useQuery({
     queryKey: queryKeys.team(params),
     queryFn: () => teamService.getAll(params as Record<string, unknown>),
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
   })
 }
 
@@ -326,6 +343,8 @@ export function useBlogPosts(params?: object) {
     queryKey: queryKeys.blog(params),
     queryFn: () => blogService.getAll(params as Record<string, unknown>),
     placeholderData: keepPreviousData,
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
   })
 }
 
@@ -361,6 +380,8 @@ export function useTestimonials(params?: object) {
   return useQuery({
     queryKey: queryKeys.testimonials(params),
     queryFn: () => testimonialsService.getAll(params as Record<string, unknown>),
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
   })
 }
 
@@ -370,6 +391,8 @@ export function useMessages(params?: object) {
     queryKey: queryKeys.messages(params),
     queryFn: () => messagesService.getAll(params as Record<string, unknown>),
     placeholderData: keepPreviousData,
+    staleTime: 30_000,
+    refetchOnWindowFocus: false,
   })
 }
 
@@ -379,6 +402,7 @@ export function useDashboardStats() {
     queryKey: queryKeys.dashboardStats(),
     queryFn: dashboardService.getStats,
     staleTime: 2 * 60 * 1000,
+    refetchOnWindowFocus: false,
   })
 }
 
@@ -386,5 +410,7 @@ export function useDashboardActivity() {
   return useQuery({
     queryKey: queryKeys.dashboardActivity(),
     queryFn: dashboardService.getRecentActivity,
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
   })
 }

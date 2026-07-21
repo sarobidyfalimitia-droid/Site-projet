@@ -8,13 +8,13 @@ import type { LoginCredentials, RegisterData } from '@/types'
 
 export function useAuth() {
   const router = useRouter()
-  const { 
-    user, 
-    isAuthenticated, 
+  const {
+    user,
+    isAuthenticated,
     isLoading,
-    setUser, 
-    setTokens, 
-    logout: storeLogout 
+    setUser,
+    setTokens,
+    logout: storeLogout
   } = useAuthStore()
 
   const login = async (credentials: LoginCredentials) => {
@@ -28,10 +28,19 @@ export function useAuth() {
 
   const register = async (payload: RegisterData) => {
     const data = await authService.register(payload)
-    setTokens(data.tokens)
-    setUser(data.user)
-    toast.success('Compte créé avec succès !')
-    router.push('/client')
+    // If backend created account immediately and returned tokens
+    if (data && data.tokens) {
+      setTokens(data.tokens)
+      setUser(data.user)
+      toast.success('Compte créé avec succès !')
+      router.push('/client')
+      return data
+    }
+    // Otherwise it's an OTP flow (message returned)
+    if (data && data.message) {
+      toast.success(data.message)
+      return { otpNeeded: true, message: data.message }
+    }
     return data
   }
 

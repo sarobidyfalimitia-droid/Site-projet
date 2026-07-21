@@ -1,10 +1,19 @@
 import { Request, Response } from 'express'
 import prisma from '../lib/prisma'
 import { invoiceSchema } from '../validators/invoice.validator'
+import { getPaginationParams, paginatedResponse } from '../src/utils/pagination'
 
-export const getInvoices = async (_req: Request, res: Response) => {
-    const invoices = await prisma.invoice.findMany({ orderBy: { dueDate: 'desc' }, include: { client: true, quote: true } })
-    res.json(invoices)
+export const getInvoices = async (req: Request, res: Response) => {
+    const pagination = getPaginationParams(req)
+    const where = pagination.search
+        ? { OR: [{ number: { contains: pagination.search, mode: 'insensitive' as const } }, { client: { name: { contains: pagination.search, mode: 'insensitive' as const } } }] }
+        : {}
+
+    const [invoices, total] = await Promise.all([
+        prisma.invoice.findMany({ where, orderBy: { dueDate: 'desc' }, include: { client: true, quote: true }, skip: pagination.skip, take: pagination.limit }),
+        prisma.invoice.count({ where }),
+    ])
+    res.json(paginatedResponse(invoices, total, pagination))
 }
 
 export const getInvoice = async (req: Request, res: Response) => {

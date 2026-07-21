@@ -5,16 +5,18 @@ import { Plus, Search, Pencil, Trash2, Mail, Phone } from 'lucide-react'
 import type { ColumnDef } from '@tanstack/react-table'
 import { DataTable } from '@/components/shared/DataTable'
 import { useClients, useDeleteClient } from '@/hooks'
+import { useDebounce } from '@/hooks/useDebounce'
 import type { Client } from '@/types'
 import { formatDate, getStatusColor, getStatusLabel, getInitials } from '@/lib/utils'
 import ClientFormModal from '@/components/admin/ClientFormModal'
 
 export default function AdminClientsPage() {
   const [search, setSearch] = useState('')
+  const debouncedSearch = useDebounce(search, 300)
   const [showModal, setShowModal] = useState(false)
   const [editClient, setEditClient] = useState<Client | undefined>()
 
-  const { data, isLoading } = useClients({ search })
+  const { data, isLoading } = useClients({ search: debouncedSearch })
   const deleteClient = useDeleteClient()
   const clients = data?.data ?? []
 

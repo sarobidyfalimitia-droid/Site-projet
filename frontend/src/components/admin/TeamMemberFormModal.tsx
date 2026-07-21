@@ -4,6 +4,19 @@ import { useEffect, useState } from 'react'
 import { X, Loader2, Plus, Minus } from 'lucide-react'
 import { useCreateTeamMember, useUpdateTeamMember } from '@/hooks'
 import type { TeamMember } from '@/types'
+import { z } from 'zod'
+
+const teamFormSchema = z.object({
+  name: z.string().min(2, 'Nom trop court'),
+  role: z.string().min(2, 'Poste requis'),
+  bio: z.string().min(10, 'Biographie trop courte (min. 10)'),
+  photo: z.string().url('URL invalide').optional().or(z.literal('')),
+  portfolioUrl: z.string().url('URL invalide').optional().or(z.literal('')),
+  skills: z.array(z.string().min(1)).optional(),
+  socials: z.array(z.string().min(1)).optional(),
+  featured: z.boolean(),
+  published: z.boolean(),
+})
 
 interface Props { member?: TeamMember; onClose: () => void }
 
@@ -14,6 +27,7 @@ export default function TeamMemberFormModal({ member, onClose }: Props) {
     name: '', role: '', bio: '', photo: '', portfolioUrl: '',
     skills: [''], socials: [''], featured: false, published: true,
   })
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
   useEffect(() => {
     if (member) setForm({
@@ -27,10 +41,21 @@ export default function TeamMemberFormModal({ member, onClose }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setErrors({})
     const payload = { ...form, skills: form.skills.filter(Boolean), socials: form.socials.filter(Boolean) }
-    if (member) await update.mutateAsync({ id: member.id, ...payload })
-    else await create.mutateAsync(payload)
+    const result = teamFormSchema.safeParse(payload)
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {}
+      result.error.errors.forEach((err) => {
+        const key = err.path[0] as string
+        if (!fieldErrors[key]) fieldErrors[key] = err.message
+      })
+      setErrors(fieldErrors)
+      return
+    }
     onClose()
+    if (member) update.mutate({ id: member.id, ...payload })
+    else create.mutate(payload)
   }
 
   const updateArr = (key: 'skills' | 'socials', i: number, val: string) => {

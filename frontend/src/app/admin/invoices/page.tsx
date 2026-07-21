@@ -5,14 +5,16 @@ import { Plus, Search, Download, FileText } from 'lucide-react'
 import type { ColumnDef } from '@tanstack/react-table'
 import { DataTable } from '@/components/shared/DataTable'
 import { useInvoices, useCreateInvoice, useGenerateInvoicePdf } from '@/hooks'
+import { useDebounce } from '@/hooks/useDebounce'
 import type { Invoice } from '@/types'
 import { formatDate, formatCurrency, getStatusColor, getStatusLabel } from '@/lib/utils'
 import InvoiceFormModal from '@/components/admin/InvoiceFormModal'
 
 export default function AdminInvoicesPage() {
   const [search, setSearch] = useState('')
+  const debouncedSearch = useDebounce(search, 300)
   const [showModal, setShowModal] = useState(false)
-  const { data, isLoading } = useInvoices({ search })
+  const { data, isLoading } = useInvoices({ search: debouncedSearch })
   const generatePdf = useGenerateInvoicePdf()
   const invoices = data?.data ?? []
 

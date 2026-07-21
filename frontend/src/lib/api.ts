@@ -9,6 +9,12 @@ export const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 })
 
+export const publicApi = axios.create({
+  baseURL: API_URL,
+  headers: { 'Content-Type': 'application/json' },
+  withCredentials: false,
+})
+
 const isSecureContext = typeof window !== 'undefined' && window.location.protocol === 'https:'
 
 // Attach access token

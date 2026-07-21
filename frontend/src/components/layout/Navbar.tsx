@@ -2,9 +2,10 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, memo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, User, Moon, Sun, ChevronDown } from 'lucide-react'
+import { useLocale } from '@/contexts/LocaleContext'
 import { useTheme } from 'next-themes'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/store/auth.store'
@@ -26,19 +27,21 @@ const navLinks = [
   { href: '/contact', label: 'Contact' },
 ]
 
-export default function Navbar() {
+function Navbar() {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [dropdown, setDropdown] = useState<string | null>(null)
   const { theme, setTheme } = useTheme()
-  const { user, isAuthenticated, isLoading } = useAuthStore()
+  const { user, isAuthenticated } = useAuthStore()
+  const { locale, setLocale, availableLocales } = useLocale()
+
+  const handleScroll = useCallback(() => setScrolled(window.scrollY > 10), [])
 
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 10)
-    window.addEventListener('scroll', handler)
-    return () => window.removeEventListener('scroll', handler)
-  }, [])
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [handleScroll])
 
   const dashboardHref = user?.role === 'admin' ? '/admin' : '/client'
   const isHomePage = pathname === '/'
@@ -130,7 +133,7 @@ export default function Navbar() {
             {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
           </button>
 
-          {isAuthenticated && !isLoading ? (
+          {isAuthenticated ? (
             <Link
               href={dashboardHref}
               className="hidden md:flex items-center gap-2 px-4 py-2 rounded-xl bg-primary-500 text-white text-sm font-medium hover:bg-primary-600 transition-all shadow-sm"
@@ -162,6 +165,17 @@ export default function Navbar() {
           >
             {open ? <X size={20} /> : <Menu size={20} />}
           </button>
+          <div className="hidden md:flex items-center ml-2">
+            <select
+              value={locale}
+              onChange={(e) => setLocale(e.target.value as any)}
+              className="bg-transparent text-sm border border-gray-200 dark:border-gray-700 rounded-lg px-2 py-1 text-gray-700 dark:text-gray-200"
+            >
+              {availableLocales.map((l) => (
+                <option key={l.code} value={l.code}>{l.flag} {l.label}</option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
@@ -229,3 +243,5 @@ export default function Navbar() {
     </header>
   )
 }
+
+export default memo(Navbar)

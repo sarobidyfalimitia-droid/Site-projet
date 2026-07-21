@@ -26,9 +26,12 @@ router.get('/:id', authenticate, async (req, res) => {
 
 router.post('/public', async (req, res) => {
   try {
-    const quote = await prisma.quote.create({ data: { ...req.body, status: 'PENDING' } })
-    res.status(201).json(quote)
-  } catch (err) { console.error(err); res.status(400).json({ error: 'Données invalides' }) }
+    await prisma.quote.create({ data: { ...req.body, status: 'PENDING' } })
+    res.status(201).send()
+  } catch (err) {
+    console.error(err)
+    res.status(400).json({ error: 'Données invalides' })
+  }
 })
 
 router.post('/', authenticate, requireAdmin, async (req, res) => {

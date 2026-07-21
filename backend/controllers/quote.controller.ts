@@ -1,10 +1,19 @@
 import { Request, Response } from 'express'
 import prisma from '../lib/prisma'
 import { quoteSchema } from '../validators/quote.validator'
+import { getPaginationParams, paginatedResponse } from '../src/utils/pagination'
 
-export const getQuotes = async (_req: Request, res: Response) => {
-    const quotes = await prisma.quote.findMany({ orderBy: { updatedAt: 'desc' }, include: { client: true } })
-    res.json(quotes)
+export const getQuotes = async (req: Request, res: Response) => {
+    const pagination = getPaginationParams(req)
+    const where = pagination.search
+        ? { OR: [{ title: { contains: pagination.search, mode: 'insensitive' as const } }, { contactName: { contains: pagination.search, mode: 'insensitive' as const } }] }
+        : {}
+
+    const [quotes, total] = await Promise.all([
+        prisma.quote.findMany({ where, orderBy: { updatedAt: 'desc' }, include: { client: true }, skip: pagination.skip, take: pagination.limit }),
+        prisma.quote.count({ where }),
+    ])
+    res.json(paginatedResponse(quotes, total, pagination))
 }
 
 export const getQuote = async (req: Request, res: Response) => {

@@ -43,9 +43,9 @@ export default function BlogFormModal({ post, onClose }: Props) {
       return
     }
     
-    if (post) await update.mutateAsync({ id: post.id, ...payload })
-    else await create.mutateAsync(payload)
     onClose()
+    if (post) update.mutate({ id: post.id, ...payload })
+    else create.mutate(payload)
   }
 
   const isLoading = create.isPending || update.isPending

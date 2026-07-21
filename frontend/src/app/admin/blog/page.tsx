@@ -1,10 +1,11 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useCallback } from 'react'
 import { Plus, Search, Pencil, Trash2, Eye } from 'lucide-react'
 import type { ColumnDef } from '@tanstack/react-table'
 import { DataTable } from '@/components/shared/DataTable'
 import { useBlogPosts, useUpdateBlogPost } from '@/hooks'
+import { useDebounce } from '@/hooks/useDebounce'
 import { blogService } from '@/services'
 import { useQueryClient } from '@tanstack/react-query'
 import type { BlogPost } from '@/types'
@@ -15,18 +16,19 @@ import toast from 'react-hot-toast'
 
 export default function AdminBlogPage() {
   const [search, setSearch] = useState('')
+  const debouncedSearch = useDebounce(search, 300)
   const [showModal, setShowModal] = useState(false)
   const [editPost, setEditPost] = useState<BlogPost | undefined>()
-  const { data, isLoading } = useBlogPosts({ all: true })
+  const { data, isLoading } = useBlogPosts({ search: debouncedSearch || undefined })
   const qc = useQueryClient()
   const posts = data?.data ?? []
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = useCallback(async (id: number) => {
     if (!confirm('Supprimer cet article ?')) return
     await blogService.delete(id)
     qc.invalidateQueries({ queryKey: ['blog'] })
     toast.success('Article supprimé')
-  }
+  }, [qc])
 
   const columns = useMemo<ColumnDef<BlogPost, unknown>[]>(
     () => [
@@ -73,14 +75,14 @@ export default function AdminBlogPage() {
         cell: ({ row }) => (
           <div className="flex items-center gap-1">
             {row.original.published && (
-              <Link href={`/blog/${row.original.slug}`} target="_blank" className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-blue-500 transition-colors">
+              <Link href={`/blog/${row.original.slug}`} target="_blank" className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-blue-500 transition-colors" aria-label="Voir l'article" title="Voir l'article">
                 <Eye size={15} />
               </Link>
             )}
-            <button onClick={() => { setEditPost(row.original); setShowModal(true) }} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-primary-500 transition-colors">
+            <button type="button" onClick={() => { setEditPost(row.original); setShowModal(true) }} className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-primary-500 transition-colors" aria-label="Modifier l'article" title="Modifier l'article">
               <Pencil size={15} />
             </button>
-            <button onClick={() => handleDelete(row.original.id)} className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-400 hover:text-red-500 transition-colors">
+            <button type="button" onClick={() => handleDelete(row.original.id)} className="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-400 hover:text-red-500 transition-colors" aria-label="Supprimer l'article" title="Supprimer l'article">
               <Trash2 size={15} />
             </button>
           </div>
@@ -97,7 +99,7 @@ export default function AdminBlogPage() {
           <h1 className="text-2xl font-display font-bold text-gray-900 dark:text-white">Blog</h1>
           <p className="text-gray-500 text-sm mt-1">{data?.total ?? 0} articles</p>
         </div>
-        <button onClick={() => { setEditPost(undefined); setShowModal(true) }} className="btn-primary flex items-center gap-2">
+        <button type="button" onClick={() => { setEditPost(undefined); setShowModal(true) }} className="btn-primary flex items-center gap-2">
           <Plus size={16} /> Nouvel article
         </button>
       </div>

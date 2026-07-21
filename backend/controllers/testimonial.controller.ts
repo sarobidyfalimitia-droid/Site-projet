@@ -1,10 +1,19 @@
 import { Request, Response } from 'express'
 import prisma from '../lib/prisma'
 import { testimonialSchema } from '../validators/testimonial.validator'
+import { getPaginationParams, paginatedResponse } from '../src/utils/pagination'
 
-export const getTestimonials = async (_req: Request, res: Response) => {
-    const testimonials = await prisma.testimonial.findMany({ orderBy: { createdAt: 'desc' } })
-    res.json(testimonials)
+export const getTestimonials = async (req: Request, res: Response) => {
+    const pagination = getPaginationParams(req)
+    const where = pagination.search
+        ? { OR: [{ clientName: { contains: pagination.search, mode: 'insensitive' as const } }, { company: { contains: pagination.search, mode: 'insensitive' as const } }, { quote: { contains: pagination.search, mode: 'insensitive' as const } }] }
+        : {}
+
+    const [testimonials, total] = await Promise.all([
+        prisma.testimonial.findMany({ where, orderBy: { createdAt: 'desc' }, skip: pagination.skip, take: pagination.limit }),
+        prisma.testimonial.count({ where }),
+    ])
+    res.json(paginatedResponse(testimonials, total, pagination))
 }
 
 export const getTestimonial = async (req: Request, res: Response) => {

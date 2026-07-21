@@ -19,6 +19,8 @@ export interface RegisterData {
   password: string
   company?: string
   phone?: string
+  phonePrefix?: string
+  phoneNumber?: string
 }
 
 export interface AuthTokens {

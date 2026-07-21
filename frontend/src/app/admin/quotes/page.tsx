@@ -5,13 +5,15 @@ import { Search, CheckCircle, XCircle, Eye } from 'lucide-react'
 import type { ColumnDef } from '@tanstack/react-table'
 import { DataTable } from '@/components/shared/DataTable'
 import { useQuotes, useUpdateQuoteStatus, useDeleteQuote } from '@/hooks'
+import { useDebounce } from '@/hooks/useDebounce'
 import type { Quote } from '@/types'
 import { formatDate, getStatusColor, getStatusLabel } from '@/lib/utils'
 
 export default function AdminQuotesPage() {
   const [search, setSearch] = useState('')
+  const debouncedSearch = useDebounce(search, 300)
   const [status, setStatus] = useState('')
-  const { data, isLoading } = useQuotes({ search, status: status || undefined })
+  const { data, isLoading } = useQuotes({ search: debouncedSearch, status: status || undefined })
   const updateStatus = useUpdateQuoteStatus()
   const deleteQuote = useDeleteQuote()
   const quotes = data?.data ?? []

@@ -148,6 +148,29 @@ PORT=3001
 FRONTEND_URL="http://localhost:3000"
 ```
 
+### OpenRouter (optionnel)
+
+Si vous utilisez le provider OpenRouter pour des modèles LLM, définissez la variable d'environnement suivante dans le backend (ou dans Docker / votre CI) :
+
+```
+OPENROUTER_API_KEY="votre_cle_openrouter_ici"
+```
+
+Ne commitez jamais votre clé privée dans le dépôt. Utilisez `.env` local ou les secrets des conteneurs.
+
+### Redémarrage de VS Code
+
+Après avoir défini la clé dans Windows avec `setx`, fermez totalement Visual Studio Code puis rouvrez-le. Sans redémarrage complet, les extensions et le terminal intégré ne verront pas toujours la nouvelle variable d'environnement.
+
+Dans VS Code, vérifiez ensuite dans un terminal intégré :
+
+```powershell
+echo $env:OPENROUTER_API_KEY
+```
+
+La valeur doit être votre clé OpenRouter réelle, pas un placeholder.
+
+
 ### Frontend (.env.local)
 ```
 NEXT_PUBLIC_API_URL=http://localhost:3001/api

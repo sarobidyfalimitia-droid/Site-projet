@@ -1,10 +1,19 @@
 import { Request, Response } from 'express'
 import prisma from '../lib/prisma'
 import { clientSchema } from '../validators/client.validator'
+import { getPaginationParams, paginatedResponse } from '../src/utils/pagination'
 
-export const getClients = async (_req: Request, res: Response) => {
-    const clients = await prisma.client.findMany({ orderBy: { name: 'asc' } })
-    res.json(clients)
+export const getClients = async (req: Request, res: Response) => {
+    const pagination = getPaginationParams(req)
+    const where = pagination.search
+        ? { OR: [{ name: { contains: pagination.search, mode: 'insensitive' as const } }, { email: { contains: pagination.search, mode: 'insensitive' as const } }] }
+        : {}
+
+    const [clients, total] = await Promise.all([
+        prisma.client.findMany({ where, orderBy: { name: 'asc' }, skip: pagination.skip, take: pagination.limit, include: { _count: { select: { projects: true, quotes: true, invoices: true } } } }),
+        prisma.client.count({ where }),
+    ])
+    res.json(paginatedResponse(clients, total, pagination))
 }
 
 export const getClient = async (req: Request, res: Response) => {

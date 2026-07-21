@@ -1,11 +1,11 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import {
   useReactTable, getCoreRowModel, getPaginationRowModel,
   getSortedRowModel, getFilteredRowModel,
   flexRender, type ColumnDef, type SortingState,
 } from '@tanstack/react-table'
-import { useState } from 'react'
 import { ChevronUp, ChevronDown, ChevronsUpDown, ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -41,6 +41,12 @@ export function DataTable<T>({
     initialState: { pagination: { pageSize } },
   })
 
+  useEffect(() => {
+    if (globalFilter !== undefined) {
+      table.setPageIndex(0)
+    }
+  }, [globalFilter, table])
+
   return (
     <div className="space-y-4">
       <div className="overflow-x-auto rounded-xl border border-gray-200 dark:border-gray-800">
@@ -51,23 +57,34 @@ export function DataTable<T>({
                 {hg.headers.map((header) => (
                   <th
                     key={header.id}
+                    scope="col"
                     className={cn(
-                      'px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider whitespace-nowrap',
+                      'px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider',
                       header.column.getCanSort() && 'cursor-pointer select-none hover:text-gray-700 dark:hover:text-gray-200'
                     )}
-                    onClick={header.column.getToggleSortingHandler()}
                   >
                     <div className="flex items-center gap-1.5">
-                      {flexRender(header.column.columnDef.header, header.getContext())}
-                      {header.column.getCanSort() && (
-                        <span className="text-gray-300 dark:text-gray-600">
-                          {header.column.getIsSorted() === 'asc' ? (
-                            <ChevronUp size={14} className="text-primary-500" />
-                          ) : header.column.getIsSorted() === 'desc' ? (
-                            <ChevronDown size={14} className="text-primary-500" />
-                          ) : (
-                            <ChevronsUpDown size={14} />
-                          )}
+                      {header.column.getCanSort() ? (
+                        <button
+                          type="button"
+                          onClick={header.column.getToggleSortingHandler()}
+                          className="flex items-center gap-1.5 w-full text-left"
+                          aria-label={`${String(header.column.columnDef.header)} trier`}
+                        >
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                          <span className="text-gray-300 dark:text-gray-600">
+                            {header.column.getIsSorted() === 'asc' ? (
+                              <ChevronUp size={14} className="text-primary-500" />
+                            ) : header.column.getIsSorted() === 'desc' ? (
+                              <ChevronDown size={14} className="text-primary-500" />
+                            ) : (
+                              <ChevronsUpDown size={14} />
+                            )}
+                          </span>
+                        </button>
+                      ) : (
+                        <span className="flex items-center gap-1.5">
+                          {flexRender(header.column.columnDef.header, header.getContext())}
                         </span>
                       )}
                     </div>
@@ -97,7 +114,7 @@ export function DataTable<T>({
               table.getRowModel().rows.map((row) => (
                 <tr key={row.id} className="bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                   {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id} className="px-4 py-3 text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                    <td key={cell.id} className="px-4 py-3 text-gray-700 dark:text-gray-300">
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
                   ))}
@@ -117,16 +134,20 @@ export function DataTable<T>({
           </span>
           <div className="flex items-center gap-1">
             <button
+              type="button"
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
               className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-40 transition-colors"
+              aria-label="Page précédente"
             >
               <ChevronLeft size={16} />
             </button>
             {[...Array(Math.min(table.getPageCount(), 7))].map((_, i) => (
               <button
                 key={i}
+                type="button"
                 onClick={() => table.setPageIndex(i)}
+                aria-label={`Page ${i + 1}`}
                 className={cn(
                   'w-8 h-8 rounded-lg text-xs font-medium transition-colors',
                   table.getState().pagination.pageIndex === i
@@ -138,9 +159,11 @@ export function DataTable<T>({
               </button>
             ))}
             <button
+              type="button"
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
               className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-40 transition-colors"
+              aria-label="Page suivante"
             >
               <ChevronRight size={16} />
             </button>

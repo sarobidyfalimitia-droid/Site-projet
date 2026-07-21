@@ -4,6 +4,22 @@ import { useEffect, useState } from 'react'
 import { X, Loader2, Plus, Minus } from 'lucide-react'
 import { useCreateProject, useUpdateProject, useCategories } from '@/hooks'
 import type { Project } from '@/types'
+import { z } from 'zod'
+
+const projectFormSchema = z.object({
+  title: z.string().min(2, 'Titre trop court (min. 2)').max(200),
+  slug: z.string().min(2, 'Slug trop court').max(200).regex(/^[a-z0-9-]+$/, 'Slug invalide (a-z, 0-9, -)'),
+  excerpt: z.string().min(10, 'Résumé trop court (min. 10)').max(300),
+  description: z.string().min(20, 'Description trop courte (min. 20)'),
+  coverImage: z.string().optional(),
+  liveUrl: z.string().url('URL invalide').optional().or(z.literal('')),
+  githubUrl: z.string().url('URL invalide').optional().or(z.literal('')),
+  technologies: z.array(z.string().min(1, 'Technologie vide')).min(1, 'Au moins une technologie'),
+  published: z.boolean(),
+  featured: z.boolean(),
+  realizedAt: z.string().min(1, 'Date requise'),
+  categoryId: z.number().int().positive('Catégorie requise'),
+})
 
 interface Props {
   project?: Project
@@ -29,6 +45,7 @@ export default function ProjectFormModal({ project, onClose }: Props) {
     realizedAt: new Date().toISOString().split('T')[0],
     categoryId: 0,
   })
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
   useEffect(() => {
     if (project) {
@@ -54,13 +71,26 @@ export default function ProjectFormModal({ project, onClose }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setErrors({})
+
     const payload = { ...form, technologies: form.technologies.filter(Boolean) }
-    if (project) {
-      await updateProject.mutateAsync({ id: project.id, ...payload })
-    } else {
-      await createProject.mutateAsync(payload)
+    const result = projectFormSchema.safeParse(payload)
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {}
+      result.error.errors.forEach((err) => {
+        const key = err.path[0] as string
+        if (!fieldErrors[key]) fieldErrors[key] = err.message
+      })
+      setErrors(fieldErrors)
+      return
     }
+
     onClose()
+    if (project) {
+      updateProject.mutate({ id: project.id, ...payload })
+    } else {
+      createProject.mutate(payload)
+    }
   }
 
   const updateTech = (i: number, val: string) => {
@@ -90,28 +120,31 @@ export default function ProjectFormModal({ project, onClose }: Props) {
               <input
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value, slug: slugify(e.target.value) })}
-                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30"
+                className={`w-full px-3 py-2.5 rounded-xl border ${errors.title ? 'border-red-400' : 'border-gray-200 dark:border-gray-700'} bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30`}
                 required
               />
+              {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title}</p>}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Slug</label>
               <input
                 value={form.slug}
                 onChange={(e) => setForm({ ...form, slug: e.target.value })}
-                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary-500/30"
+                className={`w-full px-3 py-2.5 rounded-xl border ${errors.slug ? 'border-red-400' : 'border-gray-200 dark:border-gray-700'} bg-gray-50 dark:bg-gray-800 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary-500/30`}
               />
+              {errors.slug && <p className="text-red-500 text-xs mt-1">{errors.slug}</p>}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Catégorie</label>
               <select
                 value={form.categoryId}
                 onChange={(e) => setForm({ ...form, categoryId: Number(e.target.value) })}
-                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30"
+                className={`w-full px-3 py-2.5 rounded-xl border ${errors.categoryId ? 'border-red-400' : 'border-gray-200 dark:border-gray-700'} bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30`}
               >
                 <option value={0}>Sélectionner…</option>
                 {categories?.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
+              {errors.categoryId && <p className="text-red-500 text-xs mt-1">{errors.categoryId}</p>}
             </div>
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Résumé *</label>
@@ -119,9 +152,10 @@ export default function ProjectFormModal({ project, onClose }: Props) {
                 value={form.excerpt}
                 onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
                 rows={2}
-                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30 resize-none"
+                className={`w-full px-3 py-2.5 rounded-xl border ${errors.excerpt ? 'border-red-400' : 'border-gray-200 dark:border-gray-700'} bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30 resize-none`}
                 required
               />
+              {errors.excerpt && <p className="text-red-500 text-xs mt-1">{errors.excerpt}</p>}
             </div>
             <div className="sm:col-span-2">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Description (HTML)</label>
@@ -129,8 +163,9 @@ export default function ProjectFormModal({ project, onClose }: Props) {
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
                 rows={4}
-                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary-500/30 resize-none"
+                className={`w-full px-3 py-2.5 rounded-xl border ${errors.description ? 'border-red-400' : 'border-gray-200 dark:border-gray-700'} bg-gray-50 dark:bg-gray-800 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-primary-500/30 resize-none`}
               />
+              {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description}</p>}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Image de couverture (URL)</label>
@@ -147,8 +182,9 @@ export default function ProjectFormModal({ project, onClose }: Props) {
                 type="date"
                 value={form.realizedAt}
                 onChange={(e) => setForm({ ...form, realizedAt: e.target.value })}
-                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30"
+                className={`w-full px-3 py-2.5 rounded-xl border ${errors.realizedAt ? 'border-red-400' : 'border-gray-200 dark:border-gray-700'} bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30`}
               />
+              {errors.realizedAt && <p className="text-red-500 text-xs mt-1">{errors.realizedAt}</p>}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">URL démo</label>
@@ -156,8 +192,9 @@ export default function ProjectFormModal({ project, onClose }: Props) {
                 value={form.liveUrl}
                 onChange={(e) => setForm({ ...form, liveUrl: e.target.value })}
                 placeholder="https://…"
-                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30"
+                className={`w-full px-3 py-2.5 rounded-xl border ${errors.liveUrl ? 'border-red-400' : 'border-gray-200 dark:border-gray-700'} bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30`}
               />
+              {errors.liveUrl && <p className="text-red-500 text-xs mt-1">{errors.liveUrl}</p>}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">URL GitHub</label>
@@ -165,8 +202,9 @@ export default function ProjectFormModal({ project, onClose }: Props) {
                 value={form.githubUrl}
                 onChange={(e) => setForm({ ...form, githubUrl: e.target.value })}
                 placeholder="https://github.com/…"
-                className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30"
+                className={`w-full px-3 py-2.5 rounded-xl border ${errors.githubUrl ? 'border-red-400' : 'border-gray-200 dark:border-gray-700'} bg-gray-50 dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/30`}
               />
+              {errors.githubUrl && <p className="text-red-500 text-xs mt-1">{errors.githubUrl}</p>}
             </div>
           </div>
 

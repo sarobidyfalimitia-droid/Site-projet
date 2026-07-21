@@ -10,12 +10,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const isLoading = useAuthStore((state) => state.isLoading)
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
 
-  useEffect(() => {
+useEffect(() => {
     // Toujours vérifier l'authentification au chargement
     // Mais ne pas bloquer les pages publiques comme /auth/login
     if (pathname?.startsWith('/auth')) return
     initializeAuth()
-  }, [initializeAuth, pathname])
+  }, [initializeAuth]) // Retiré pathname pour éviter les appels répétés
 
   // Afficher un loader uniquement sur les pages protégées pendant la vérification
   // Les pages publiques affichent leur contenu normalement

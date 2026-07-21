@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import prisma from '../lib/prisma'
 import { messageSchema } from '../validators/message.validator'
+import { getPaginationParams, paginatedResponse } from '../src/utils/pagination'
 
 export const sendMessage = async (req: Request, res: Response) => {
   const result = messageSchema.safeParse(req.body)
@@ -9,9 +10,17 @@ export const sendMessage = async (req: Request, res: Response) => {
   res.status(201).json({ message: 'Message envoyé', id: message.id })
 }
 
-export const getMessages = async (_req: Request, res: Response) => {
-  const messages = await prisma.message.findMany({ orderBy: { createdAt: 'desc' } })
-  res.json(messages)
+export const getMessages = async (req: Request, res: Response) => {
+  const pagination = getPaginationParams(req)
+  const where = pagination.search
+    ? { OR: [{ name: { contains: pagination.search, mode: 'insensitive' as const } }, { email: { contains: pagination.search, mode: 'insensitive' as const } }, { subject: { contains: pagination.search, mode: 'insensitive' as const } }] }
+    : {}
+
+  const [messages, total] = await Promise.all([
+    prisma.message.findMany({ where, orderBy: { createdAt: 'desc' }, skip: pagination.skip, take: pagination.limit }),
+    prisma.message.count({ where }),
+  ])
+  res.json(paginatedResponse(messages, total, pagination))
 }
 
 export const markAsRead = async (req: Request, res: Response) => {

@@ -1,10 +1,19 @@
 import { Request, Response } from 'express'
 import prisma from '../lib/prisma'
 import { appointmentSchema } from '../validators/appointment.validator'
+import { getPaginationParams, paginatedResponse } from '../src/utils/pagination'
 
-export const getAppointments = async (_req: Request, res: Response) => {
-    const appointments = await prisma.appointment.findMany({ orderBy: { scheduledAt: 'desc' }, include: { client: true } })
-    res.json(appointments)
+export const getAppointments = async (req: Request, res: Response) => {
+    const pagination = getPaginationParams(req)
+    const where = pagination.search
+        ? { OR: [{ subject: { contains: pagination.search, mode: 'insensitive' as const } }, { client: { name: { contains: pagination.search, mode: 'insensitive' as const } } }] }
+        : {}
+
+    const [appointments, total] = await Promise.all([
+        prisma.appointment.findMany({ where, orderBy: { scheduledAt: 'desc' }, include: { client: true }, skip: pagination.skip, take: pagination.limit }),
+        prisma.appointment.count({ where }),
+    ])
+    res.json(paginatedResponse(appointments, total, pagination))
 }
 
 export const getAppointment = async (req: Request, res: Response) => {

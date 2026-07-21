@@ -1,10 +1,24 @@
 import { Request, Response } from 'express'
 import prisma from '../lib/prisma'
 import { teamMemberSchema } from '../validators/teamMember.validator'
+import { getPaginationParams, paginatedResponse } from '../src/utils/pagination'
 
-export const getTeamMembers = async (_req: Request, res: Response) => {
-    const members = await prisma.teamMember.findMany({ orderBy: { createdAt: 'desc' } })
-    res.json(members)
+export const getTeamMembers = async (req: Request, res: Response) => {
+    const { published } = req.query
+    const pagination = getPaginationParams(req)
+
+    const where = {
+        ...(published !== undefined ? { published: published === 'true' } : {}),
+        ...(pagination.search
+            ? { OR: [{ name: { contains: pagination.search, mode: 'insensitive' as const } }, { role: { contains: pagination.search, mode: 'insensitive' as const } }] }
+            : {}),
+    }
+
+    const [members, total] = await Promise.all([
+        prisma.teamMember.findMany({ where, orderBy: { createdAt: 'desc' }, skip: pagination.skip, take: pagination.limit }),
+        prisma.teamMember.count({ where }),
+    ])
+    res.json(paginatedResponse(members, total, pagination))
 }
 
 export const getTeamMember = async (req: Request, res: Response) => {

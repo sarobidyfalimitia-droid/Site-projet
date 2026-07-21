@@ -1,9 +1,10 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter, Outfit, JetBrains_Mono } from 'next/font/google'
 import { ThemeProvider } from 'next-themes'
 import { Toaster } from 'react-hot-toast'
 import { QueryProvider } from '@/lib/query-provider'
 import { AuthProvider } from '@/components/auth/AuthProvider'
+import { LocaleProvider } from '@/contexts/LocaleContext'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
@@ -27,15 +28,28 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 }
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: true,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#0f0f14' },
+  ],
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr" suppressHydrationWarning>
       <body className={`${inter.variable} ${outfit.variable} ${jetbrains.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
           <QueryProvider>
-            <AuthProvider>
-              {children}
-            </AuthProvider>
+            <LocaleProvider>
+              <AuthProvider>
+                {children}
+              </AuthProvider>
+            </LocaleProvider>
             <Toaster
               position="top-right"
               toastOptions={{

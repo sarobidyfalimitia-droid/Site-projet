@@ -1,19 +1,33 @@
 import { Request, Response } from 'express'
 import prisma from '../lib/prisma'
 import { projectSchema } from '../validators/project.validator'
+import { getPaginationParams, paginatedResponse, buildSearchFilter } from '../src/utils/pagination'
 
 export const getPublicProjects = async (req: Request, res: Response) => {
-  const { category, featured } = req.query
-  const projects = await prisma.project.findMany({
-    where: {
-      published: true,
-      ...(category ? { category: { slug: category as string } } : {}),
-      ...(featured === 'true' ? { featured: true } : {}),
-    },
-    include: { category: true },
-    orderBy: { realizedAt: 'desc' },
-  })
-  res.json(projects)
+  const { category, featured, sort } = req.query
+  const pagination = getPaginationParams(req)
+
+  const where = {
+    published: true,
+    ...(category ? { category: { slug: category as string } } : {}),
+    ...(featured === 'true' ? { featured: true } : {}),
+    ...(pagination.search
+      ? { OR: [{ title: { contains: pagination.search, mode: 'insensitive' as const } }, { excerpt: { contains: pagination.search, mode: 'insensitive' as const } }] }
+      : {}),
+  }
+
+  const [projects, total] = await Promise.all([
+    prisma.project.findMany({
+      where,
+      include: { category: true },
+      orderBy: { realizedAt: sort === 'asc' ? 'asc' : 'desc' },
+      skip: pagination.skip,
+      take: pagination.limit,
+    }),
+    prisma.project.count({ where }),
+  ])
+
+  res.json(paginatedResponse(projects, total, pagination))
 }
 
 export const getPublicProjectBySlug = async (req: Request, res: Response) => {
@@ -25,12 +39,25 @@ export const getPublicProjectBySlug = async (req: Request, res: Response) => {
   res.json(project)
 }
 
-export const getAllProjectsAdmin = async (_req: Request, res: Response) => {
-  const projects = await prisma.project.findMany({
-    include: { category: true },
-    orderBy: { createdAt: 'desc' },
-  })
-  res.json(projects)
+export const getAllProjectsAdmin = async (req: Request, res: Response) => {
+  const pagination = getPaginationParams(req)
+
+  const where = pagination.search
+    ? { OR: [{ title: { contains: pagination.search, mode: 'insensitive' as const } }, { excerpt: { contains: pagination.search, mode: 'insensitive' as const } }] }
+    : {}
+
+  const [projects, total] = await Promise.all([
+    prisma.project.findMany({
+      where,
+      include: { category: true },
+      orderBy: { createdAt: 'desc' },
+      skip: pagination.skip,
+      take: pagination.limit,
+    }),
+    prisma.project.count({ where }),
+  ])
+
+  res.json(paginatedResponse(projects, total, pagination))
 }
 
 export const createProject = async (req: Request, res: Response) => {

@@ -40,9 +40,9 @@ export default function ClientFormModal({ client, onClose }: Props) {
     }
     
     const payload = { ...form, ...(form.password ? {} : { password: undefined }) }
-    if (client) await updateClient.mutateAsync({ id: client.id, ...payload })
-    else await createClient.mutateAsync(payload)
     onClose()
+    if (client) updateClient.mutate({ id: client.id, ...payload })
+    else createClient.mutate(payload)
   }
 
   const isLoading = createClient.isPending || updateClient.isPending

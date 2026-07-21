@@ -6,6 +6,7 @@ import { Plus, Search, Pencil, Trash2, Eye, Star, Globe } from 'lucide-react'
 import type { ColumnDef } from '@tanstack/react-table'
 import { DataTable } from '@/components/shared/DataTable'
 import { useProjects, useDeleteProject } from '@/hooks'
+import { useDebounce } from '@/hooks/useDebounce'
 import type { Project } from '@/types'
 import { formatDate, getStatusColor, buildImageUrl } from '@/lib/utils'
 import Image from 'next/image'
@@ -14,11 +15,12 @@ import ProjectFormModal from '@/components/admin/ProjectFormModal'
 
 export default function AdminProjectsPage() {
   const [search, setSearch] = useState('')
+  const debouncedSearch = useDebounce(search, 300)
   const [page, setPage] = useState(1)
   const [showModal, setShowModal] = useState(false)
   const [editProject, setEditProject] = useState<Project | undefined>()
 
-  const { data, isLoading } = useProjects({ search, page, limit: 20 })
+  const { data, isLoading } = useProjects({ search: debouncedSearch, page, limit: 20 })
   const deleteProject = useDeleteProject()
 
   const projects = data?.data ?? []

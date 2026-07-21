@@ -20,7 +20,7 @@ router.post('/', authenticate, requireAdmin, async (req, res) => {
   try {
     const parsed = blogPostSchema.safeParse(req.body)
     if (!parsed.success) return res.status(400).json({ error: 'Données invalides' })
-    const data = { ...parsed.data, publishedAt: parsed.data.published ? new Date() : null }
+    const data = { ...parsed.data, publishedAt: parsed.data.published ? new Date() : null, updatedAt: new Date() }
     const p = await prisma.blogPost.create({ data })
     res.status(201).json(p)
   } catch (err) { console.error(err); res.status(400).json({ error: 'Données invalides' }) }

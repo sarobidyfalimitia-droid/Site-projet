@@ -7,8 +7,14 @@ export const authService = {
     return data
   },
 
-  async register(payload: RegisterData): Promise<AuthResponse> {
+  // register returns a message (OTP sent). Complete registration with verifyRegister.
+  async register(payload: RegisterData): Promise<any> {
     const { data } = await api.post('/auth/register', payload)
+    return data
+  },
+
+  async verifyRegister(email: string, code: string): Promise<AuthResponse> {
+    const { data } = await api.post('/auth/register/verify', { email, code })
     return data
   },
 
@@ -28,6 +34,16 @@ export const authService = {
 
   async changePassword(currentPassword: string, newPassword: string) {
     const { data } = await api.patch('/auth/change-password', { currentPassword, newPassword })
+    return data
+  },
+
+  async forgotPassword(email: string) {
+    const { data } = await api.post('/auth/forgot-password', { email })
+    return data
+  },
+
+  async resetPassword(email: string, code: string, newPassword: string) {
+    const { data } = await api.post('/auth/reset-password', { email, code, newPassword })
     return data
   },
 }

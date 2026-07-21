@@ -1,10 +1,19 @@
 import { Request, Response } from 'express'
 import prisma from '../lib/prisma'
 import { blogPostSchema } from '../validators/blogPost.validator'
+import { getPaginationParams, paginatedResponse } from '../src/utils/pagination'
 
-export const getBlogPosts = async (_req: Request, res: Response) => {
-    const posts = await prisma.blogPost.findMany({ orderBy: { publishedAt: 'desc' } })
-    res.json(posts)
+export const getBlogPosts = async (req: Request, res: Response) => {
+    const pagination = getPaginationParams(req)
+    const where = pagination.search
+        ? { OR: [{ title: { contains: pagination.search, mode: 'insensitive' as const } }, { excerpt: { contains: pagination.search, mode: 'insensitive' as const } }] }
+        : {}
+
+    const [posts, total] = await Promise.all([
+        prisma.blogPost.findMany({ where, orderBy: { publishedAt: 'desc' }, skip: pagination.skip, take: pagination.limit }),
+        prisma.blogPost.count({ where }),
+    ])
+    res.json(paginatedResponse(posts, total, pagination))
 }
 
 export const getBlogPost = async (req: Request, res: Response) => {

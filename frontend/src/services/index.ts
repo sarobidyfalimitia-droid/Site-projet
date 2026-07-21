@@ -1,4 +1,4 @@
-import api from '@/lib/api'
+import api, { publicApi } from '@/lib/api'
 import type {
   Category, Client, Quote, Invoice, Contract,
   Appointment, TeamMember, BlogPost, Testimonial,
@@ -73,7 +73,7 @@ export const quotesService = {
     await api.delete(`/quotes/${id}`)
   },
   async submitPublic(payload: Partial<Quote>): Promise<void> {
-    await api.post('/quotes/public', payload)
+    await publicApi.post('/quotes/public', payload)
   },
 }
 
@@ -232,7 +232,7 @@ export const messagesService = {
     await api.delete(`/messages/${id}`)
   },
   async sendPublic(payload: Partial<Message>): Promise<void> {
-    await api.post('/messages/public', payload)
+    await publicApi.post('/messages/public', payload)
   },
 }
 

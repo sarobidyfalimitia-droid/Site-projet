@@ -14,7 +14,7 @@ model Admin {
   refreshToken     String?
   twoFactorEnabled Boolean  @default(false)
   createdAt        DateTime @default(now())
-  updatedAt        DateTime
+  updatedAt        DateTime @updatedAt
 }
 
 model Appointment {
@@ -26,8 +26,18 @@ model Appointment {
   status      AppointmentStatus @default(PENDING)
   meetingUrl  String?
   createdAt   DateTime          @default(now())
-  updatedAt   DateTime
-  Client      Client?           @relation(fields: [clientId], references: [id])
+  updatedAt   DateTime          @updatedAt
+  client      Client?           @relation(fields: [clientId], references: [id])
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  subject   String
+  body      String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
 }
 
 model BlogPost {
@@ -41,14 +51,14 @@ model BlogPost {
   published   Boolean   @default(false)
   publishedAt DateTime?
   createdAt   DateTime  @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime  @updatedAt
 }
 
 model Category {
   id      Int       @id @default(autoincrement())
   name    String    @unique
   slug    String    @unique
-  Project Project[]
+  projects Project[]
 }
 
 model Client {
@@ -61,12 +71,31 @@ model Client {
   refreshToken String?
   status       String        @default("active")
   createdAt    DateTime      @default(now())
-  updatedAt    DateTime
-  Appointment  Appointment[]
-  Contract     Contract[]
-  Invoice      Invoice[]
-  Project      Project[]
-  Quote        Quote[]
+  updatedAt    DateTime      @updatedAt
+  appointments Appointment[]
+  contracts    Contract[]
+  invoices     Invoice[]
+  projects     Project[]
+  quotes       Quote[]
+}
+
+model AuthOtp {
+  id        Int           @id @default(autoincrement())
+  email     String
+  type      AuthOtpType
+  code      String
+  expiresAt DateTime
+  used      Boolean       @default(false)
+  payload   Json?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@index([email, type])
+}
+
+enum AuthOtpType {
+  REGISTER
+  RESET
 }
 
 model Contract {
@@ -81,9 +110,9 @@ model Contract {
   pdfUrl      String?
   signedAt    DateTime?
   createdAt   DateTime       @default(now())
-  updatedAt   DateTime
-  Client      Client?        @relation(fields: [clientId], references: [id])
-  Quote       Quote?         @relation(fields: [quoteId], references: [id])
+  updatedAt   DateTime       @updatedAt
+  client      Client?        @relation(fields: [clientId], references: [id])
+  quote       Quote?         @relation(fields: [quoteId], references: [id])
 }
 
 model Invoice {
@@ -96,9 +125,9 @@ model Invoice {
   status    InvoiceStatus @default(PENDING)
   pdfUrl    String?
   createdAt DateTime      @default(now())
-  updatedAt DateTime
-  Client    Client?       @relation(fields: [clientId], references: [id])
-  Quote     Quote?        @relation(fields: [quoteId], references: [id])
+  updatedAt DateTime      @updatedAt
+  client    Client?       @relation(fields: [clientId], references: [id])
+  quote     Quote?        @relation(fields: [quoteId], references: [id])
 }
 
 model Project {
@@ -118,9 +147,9 @@ model Project {
   categoryId   Int
   clientId     Int?
   createdAt    DateTime @default(now())
-  updatedAt    DateTime
-  Category     Category @relation(fields: [categoryId], references: [id])
-  Client       Client?  @relation(fields: [clientId], references: [id])
+  updatedAt    DateTime @updatedAt
+  category     Category @relation(fields: [categoryId], references: [id])
+  client       Client?  @relation(fields: [clientId], references: [id])
 }
 
 model Quote {
@@ -136,10 +165,10 @@ model Quote {
   contactPhone String?
   company      String?
   createdAt    DateTime    @default(now())
-  updatedAt    DateTime
-  Contract     Contract[]
-  Invoice      Invoice[]
-  Client       Client?     @relation(fields: [clientId], references: [id])
+  updatedAt    DateTime    @updatedAt
+  contracts    Contract[]
+  invoices     Invoice[]
+  client       Client?     @relation(fields: [clientId], references: [id])
 }
 
 model TeamMember {
@@ -154,7 +183,7 @@ model TeamMember {
   featured     Boolean  @default(false)
   published    Boolean  @default(true)
   createdAt    DateTime @default(now())
-  updatedAt    DateTime
+  updatedAt    DateTime @updatedAt
 }
 
 model Testimonial {
@@ -166,7 +195,7 @@ model Testimonial {
   rating     Int      @default(5)
   published  Boolean  @default(false)
   createdAt  DateTime @default(now())
-  updatedAt  DateTime
+  updatedAt  DateTime @updatedAt
 }
 
 enum QuoteStatus {
