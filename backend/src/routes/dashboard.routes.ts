@@ -1,8 +1,9 @@
-import { Router } from 'express'
+import { Router, Request, Response } from 'express'
 import prisma from '../lib/prisma'
 import { authenticate, requireAdmin } from '../middleware/auth.middleware'
 const router = Router()
-router.get('/stats', authenticate, requireAdmin, async (_req, res) => {
+
+router.get('/stats', authenticate as any, requireAdmin as any, async (_req: Request, res: Response) => {
   const messageModel = (prisma as any).message
   const [projects, clients, quotes, invoices, unreadMessages] = await Promise.all([
     prisma.project.count(),
@@ -16,7 +17,8 @@ router.get('/stats', authenticate, requireAdmin, async (_req, res) => {
   const activeProjects = await prisma.project.count({ where: { published: false } })
   res.json({ projects, clients, quotes: invoices.length, invoices: invoices.length, revenue, pendingQuotes, activeProjects, unreadMessages })
 })
-router.get('/activity', authenticate, requireAdmin, async (_req, res) => {
+
+router.get('/activity', authenticate as any, requireAdmin as any, async (_req: Request, res: Response) => {
   const messageModel = (prisma as any).message
   const [recentQuotes, recentMessages, recentProjects] = await Promise.all([
     prisma.quote.findMany({ take: 5, orderBy: { createdAt: 'desc' }, include: { client: { select: { name: true } } } }),
@@ -25,4 +27,5 @@ router.get('/activity', authenticate, requireAdmin, async (_req, res) => {
   ])
   res.json({ recentQuotes, recentMessages, recentProjects })
 })
+
 export default router

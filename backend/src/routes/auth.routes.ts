@@ -1,17 +1,18 @@
-import { Router } from 'express'
-import { login, register, verifyRegister, forgotPassword, resetPassword, refresh, me, logout, changePassword } from '../controllers/auth.controller'
+import express from 'express'
+import { login, register, refresh, changePassword, me, logout } from '../controllers/auth.controller'
 import { authenticate } from '../middleware/auth.middleware'
+import authGoogleRoutes from './auth.google.routes'
 
-const router = Router()
+const router = express.Router()
 
 router.post('/login', login)
 router.post('/register', register)
-router.post('/register/verify', verifyRegister)
-router.post('/forgot-password', forgotPassword)
-router.post('/reset-password', resetPassword)
 router.post('/refresh', refresh)
-router.patch('/change-password', authenticate, changePassword)
+router.post('/change-password', authenticate, changePassword)
 router.get('/me', authenticate, me)
 router.post('/logout', authenticate, logout)
+
+// Google OAuth routes
+router.use('/google', authGoogleRoutes)
 
 export default router

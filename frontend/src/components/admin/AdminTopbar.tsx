@@ -5,12 +5,26 @@ import { useTheme } from 'next-themes'
 import { useAuthStore } from '@/store/auth.store'
 import { getInitials } from '@/lib/utils'
 
-export default function AdminTopbar() {
+interface AdminTopbarProps {
+  onMenuClick?: () => void
+}
+
+export default function AdminTopbar({ onMenuClick }: AdminTopbarProps) {
   const { theme, setTheme } = useTheme()
   const { user } = useAuthStore()
 
   return (
     <header className="h-16 flex items-center justify-between px-6 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+      {/* Mobile menu button */}
+      <button
+        type="button"
+        onClick={onMenuClick}
+        className="md:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        aria-label="Menu"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+
       {/* Search */}
       <div className="relative hidden md:block w-72">
         <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />

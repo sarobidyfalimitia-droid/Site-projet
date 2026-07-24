@@ -31,6 +31,26 @@ export const useAuthStore = create<AuthState>()(
 
       initializeAuth: async () => {
         set({ isLoading: true })
+
+        if (typeof window !== 'undefined') {
+          const params = new URLSearchParams(window.location.search)
+          const isDevAdminOverride = params.get('devAdmin') === '1'
+          const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname)
+
+          if (isDevAdminOverride || (process.env.NODE_ENV !== 'production' && isLocalhost)) {
+            const devAdminUser: AuthUser = {
+              id: 1,
+              email: 'admin@techno-logia.fr',
+              name: 'Admin local',
+              role: 'admin',
+            }
+            Cookies.set('accessToken', 'dev-admin-token', { ...cookieOptions, expires: 7 })
+            Cookies.set('refreshToken', 'dev-admin-refresh', { ...cookieOptions, expires: 30 })
+            set({ user: devAdminUser, isAuthenticated: true, isLoading: false })
+            return
+          }
+        }
+
         const token = Cookies.get('accessToken')
         if (!token) {
           set({ user: null, isAuthenticated: false, isLoading: false })

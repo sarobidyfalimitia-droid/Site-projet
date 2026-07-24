@@ -1,17 +1,17 @@
 {
   "models": [
     {
-      "title": "DeepSeek-V4-Flash (Official API)",
+      "title": "OpenRouter GPT-4.1 Mini",
       "provider": "openai",
-      "model": "deepseek-v4-flash",
-      "apiKey": "DEEPSEEK_API_KEY",
-      "apiBase": "https://api.deepseek.com/v1",
+      "model": "openai/gpt-4.1-mini",
+      "apiKey": "OPENROUTER_API_KEY",
+      "apiBase": "https://openrouter.ai/api/v1",
       "contextLength": 128000
     },
     {
-      "title": "DeepSeek-V4-Pro (Official API)",
+      "title": "DeepSeek-V4-Flash (Official API)",
       "provider": "openai",
-      "model": "deepseek-v4-pro",
+      "model": "deepseek-v4-flash",
       "apiKey": "DEEPSEEK_API_KEY",
       "apiBase": "https://api.deepseek.com/v1",
       "contextLength": 128000
@@ -33,6 +33,6 @@
       "prompt": "Generate documentation for the selected code. Include JSDoc comments and usage examples."
     }
   ],
-  "tabAutocompleteModel": "DeepSeek-V4-Flash (Official API)",
+  "tabAutocompleteModel": "OpenRouter GPT-4.1 Mini",
   "embeddingsProvider": "openai"
 }

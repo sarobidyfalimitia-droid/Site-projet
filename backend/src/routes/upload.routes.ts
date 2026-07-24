@@ -1,4 +1,4 @@
-import { Router } from 'express'
+import { Router, RequestHandler } from 'express'
 import multer from 'multer'
 import path from 'path'
 import fs from 'fs'
@@ -30,12 +30,12 @@ const upload = multer({
   },
 })
 
-router.post('/', authenticate, upload.single('file'), (req, res) => {
+router.post('/', authenticate, upload.single('file') as unknown as RequestHandler, (req: any, res) => {
   if (!req.file) return res.status(400).json({ error: 'Aucun fichier fourni' })
   res.json({ url: `/uploads/${req.file.filename}`, filename: req.file.originalname, size: req.file.size, mimetype: req.file.mimetype })
 })
 
-router.post('/multiple', authenticate, upload.array('files', 10), (req, res) => {
+router.post('/multiple', authenticate, upload.array('files', 10) as unknown as RequestHandler, (req: any, res) => {
   const files = req.files as Express.Multer.File[]
   if (!files?.length) return res.status(400).json({ error: 'Aucun fichier fourni' })
   res.json(files.map(f => ({ url: `/uploads/${f.filename}`, filename: f.originalname, size: f.size, mimetype: f.mimetype })))

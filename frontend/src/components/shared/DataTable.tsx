@@ -127,12 +127,22 @@ export function DataTable<T>({
 
       {/* Pagination */}
       {table.getPageCount() > 1 && (
-        <div className="flex items-center justify-between text-sm text-gray-500">
-          <span>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-500">
+          <span className="text-xs sm:text-sm">
             Page {table.getState().pagination.pageIndex + 1} sur {table.getPageCount()}
             {' · '}{table.getFilteredRowModel().rows.length} résultat(s)
           </span>
           <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => table.setPageIndex(0)}
+              disabled={!table.getCanPreviousPage()}
+              className="hidden sm:inline-flex p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-40 transition-colors"
+              aria-label="Première page"
+              title="Première page"
+            >
+              <ChevronsUpDown size={14} className="rotate-90" />
+            </button>
             <button
               type="button"
               onClick={() => table.previousPage()}
@@ -142,22 +152,42 @@ export function DataTable<T>({
             >
               <ChevronLeft size={16} />
             </button>
-            {[...Array(Math.min(table.getPageCount(), 7))].map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => table.setPageIndex(i)}
-                aria-label={`Page ${i + 1}`}
-                className={cn(
-                  'w-8 h-8 rounded-lg text-xs font-medium transition-colors',
-                  table.getState().pagination.pageIndex === i
-                    ? 'bg-primary-500 text-white'
-                    : 'hover:bg-gray-100 dark:hover:bg-gray-800'
-                )}
-              >
-                {i + 1}
-              </button>
-            ))}
+            {(() => {
+              const total = table.getPageCount()
+              const current = table.getState().pagination.pageIndex
+              const pages: (number | 'ellipsis')[] = []
+              if (total <= 7) {
+                for (let i = 0; i < total; i++) pages.push(i)
+              } else {
+                pages.push(0)
+                if (current > 2) pages.push('ellipsis')
+                for (let i = Math.max(1, current - 1); i <= Math.min(total - 2, current + 1); i++) {
+                  pages.push(i)
+                }
+                if (current < total - 3) pages.push('ellipsis')
+                pages.push(total - 1)
+              }
+              return pages.map((p, idx) =>
+                p === 'ellipsis' ? (
+                  <span key={`e-${idx}`} className="w-8 h-8 flex items-center justify-center text-xs text-gray-400">…</span>
+                ) : (
+                  <button
+                    key={p}
+                    type="button"
+                    onClick={() => table.setPageIndex(p)}
+                    aria-label={`Page ${p + 1}`}
+                    className={cn(
+                      'w-8 h-8 rounded-lg text-xs font-medium transition-colors',
+                      current === p
+                        ? 'bg-primary-500 text-white'
+                        : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                    )}
+                  >
+                    {p + 1}
+                  </button>
+                )
+              )
+            })()}
             <button
               type="button"
               onClick={() => table.nextPage()}
@@ -166,6 +196,16 @@ export function DataTable<T>({
               aria-label="Page suivante"
             >
               <ChevronRight size={16} />
+            </button>
+            <button
+              type="button"
+              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+              disabled={!table.getCanNextPage()}
+              className="hidden sm:inline-flex p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-40 transition-colors"
+              aria-label="Dernière page"
+              title="Dernière page"
+            >
+              <ChevronsUpDown size={14} className="-rotate-90" />
             </button>
           </div>
         </div>

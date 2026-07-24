@@ -1,0 +1,37 @@
+app = "agency-platform-backend"
+primary_region = "fra"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  NODE_ENV = "production"
+  PORT = "3001"
+  UPLOAD_DIR = "/app/uploads"
+  SMTP_HOST = "smtp.gmail.com"
+  SMTP_PORT = "587"
+  SMTP_FROM = "Techno-logia <noreply@techno-logia.fr>"
+  SMTP_DISABLED = "false"
+
+[http_service]
+  internal_port = 3001
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 50
+    hard_limit = 100
+
+[[vm]]
+  memory = "512mb"
+  cpu_kind = "shared"
+  cpus = 1
+
+# Volume pour les uploads (optionnel, nécessite un volume séparé)
+# [[mounts]]
+#   source = "uploads"
+#   destination = "/app/uploads"

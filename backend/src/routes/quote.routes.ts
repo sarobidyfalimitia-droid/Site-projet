@@ -1,11 +1,11 @@
-import { Router } from 'express'
+import { Router, Request, Response } from 'express'
 import prisma from '../lib/prisma'
 import { authenticate, requireAdmin } from '../middleware/auth.middleware'
 
 const router = Router()
 const include = { client: { select: { id: true, name: true, email: true } } }
 
-router.get('/', authenticate, requireAdmin, async (req, res) => {
+router.get('/', authenticate as any, requireAdmin as any, async (req: Request, res: Response) => {
   const { search, status, page = 1, limit = 20 } = req.query
   const skip = (Number(page) - 1) * Number(limit)
   const where: Record<string, unknown> = {}
@@ -18,13 +18,13 @@ router.get('/', authenticate, requireAdmin, async (req, res) => {
   res.json({ data, total, page: Number(page), limit: Number(limit), totalPages: Math.ceil(total / Number(limit)) })
 })
 
-router.get('/:id', authenticate, async (req, res) => {
+router.get('/:id', authenticate as any, async (req: Request, res: Response) => {
   const quote = await prisma.quote.findUnique({ where: { id: Number(req.params.id) }, include })
   if (!quote) return res.status(404).json({ error: 'Devis introuvable' })
   res.json(quote)
 })
 
-router.post('/public', async (req, res) => {
+router.post('/public', async (req: Request, res: Response) => {
   try {
     await prisma.quote.create({ data: { ...req.body, status: 'PENDING' } })
     res.status(201).send()
@@ -34,28 +34,28 @@ router.post('/public', async (req, res) => {
   }
 })
 
-router.post('/', authenticate, requireAdmin, async (req, res) => {
+router.post('/', authenticate as any, requireAdmin as any, async (req: Request, res: Response) => {
   try {
     const quote = await prisma.quote.create({ data: req.body, include })
     res.status(201).json(quote)
   } catch { res.status(400).json({ error: 'Données invalides' }) }
 })
 
-router.put('/:id', authenticate, requireAdmin, async (req, res) => {
+router.put('/:id', authenticate as any, requireAdmin as any, async (req: Request, res: Response) => {
   try {
     const quote = await prisma.quote.update({ where: { id: Number(req.params.id) }, data: req.body, include })
     res.json(quote)
   } catch { res.status(400).json({ error: 'Mise à jour impossible' }) }
 })
 
-router.patch('/:id/status', authenticate, requireAdmin, async (req, res) => {
+router.patch('/:id/status', authenticate as any, requireAdmin as any, async (req: Request, res: Response) => {
   try {
     const quote = await prisma.quote.update({ where: { id: Number(req.params.id) }, data: { status: req.body.status }, include })
     res.json(quote)
   } catch { res.status(400).json({ error: 'Mise à jour impossible' }) }
 })
 
-router.delete('/:id', authenticate, requireAdmin, async (req, res) => {
+router.delete('/:id', authenticate as any, requireAdmin as any, async (req: Request, res: Response) => {
   try {
     await prisma.quote.delete({ where: { id: Number(req.params.id) } })
     res.status(204).send()

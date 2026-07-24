@@ -6,15 +6,10 @@ import type { AuthRequest } from '../middleware/auth.middleware'
 import {
   loginSchema,
   registerRequestSchema,
-  verifyOtpSchema,
-  forgotPasswordSchema,
-  resetPasswordSchema,
   changePasswordSchema,
 } from '../validators/auth.validator'
 import { z } from 'zod'
-import { generateOTP, getOtpExpiry } from '../utils/otp'
-import { sendEmail, emailTemplates } from '../utils/email'
-import { normalizeEmail, isOtpCodeValid } from '../utils/auth.utils'
+import { normalizeEmail } from '../utils/auth.utils'
 
 const generateTokens = (id: number, email: string, role: string) => {
   const accessToken = jwt.sign(
@@ -80,82 +75,25 @@ export async function register(req: Request, res: Response) {
     if (exists) return res.status(409).json({ error: 'Un compte avec cet email existe déjà' })
 
     const hashedPassword = await bcrypt.hash(password, 12)
-    const code = generateOTP(6)
-    const expiresAt = getOtpExpiry(10)
-
-    await prisma.authOtp.create({
-      data: {
-        email: normalizedEmail,
-        type: 'REGISTER',
-        code,
-        expiresAt,
-        payload: {
-          name,
-          email: normalizedEmail,
-          password: hashedPassword,
-          company: company || null,
-          phone,
-        },
-      },
-    })
-
-    void sendEmail({
-      to: normalizedEmail,
-      subject: 'Code de vérification Techno-logia',
-      html: emailTemplates.verifyRegistration(name, code),
-    })
-
-    res.status(200).json({ message: 'Code de vérification envoyé à votre adresse email.' })
-  } catch (err) {
-    console.error(err)
-    res.status(500).json({ error: 'Erreur lors de l\'envoi du code de vérification' })
-  }
-}
-
-export async function verifyRegister(req: Request, res: Response) {
-  try {
-    const parsed = verifyOtpSchema.safeParse(req.body)
-    if (!parsed.success) return res.status(400).json({ error: 'Données invalides', details: parsed.error.errors })
-
-    const { email, code } = parsed.data
-    const normalizedEmail = normalizeEmail(email)
-    if (!isOtpCodeValid(code)) return res.status(400).json({ error: 'Code OTP invalide' })
-    const otp = await prisma.authOtp.findFirst({
-      where: {
-        email: normalizedEmail,
-        type: 'REGISTER',
-        code,
-        used: false,
-        expiresAt: { gt: new Date() },
-      },
-      orderBy: { createdAt: 'desc' },
-    })
-
-    if (!otp || !otp.payload) return res.status(400).json({ error: 'Code OTP invalide ou expiré' })
-    const payload = otp.payload as { name: string; email: string; password: string; company?: string | null; phone?: string | null }
-
-    const exists = await prisma.client.findUnique({ where: { email: normalizedEmail } })
-    if (exists) return res.status(409).json({ error: 'Un compte avec cet email existe déjà' })
 
     const client = await prisma.client.create({
       data: {
-        name: payload.name,
+        name,
         email: normalizedEmail,
-        password: payload.password,
-        company: payload.company || null,
-        phone: payload.phone || null,
+        password: hashedPassword,
+        company: company || null,
+        phone,
         status: 'active',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
     })
 
-    await prisma.authOtp.update({ where: { id: otp.id }, data: { used: true } })
-
     const tokens = generateTokens(client.id, client.email, 'client')
     await prisma.client.update({ where: { id: client.id }, data: { refreshToken: tokens.refreshToken } })
 
     res.status(201).json({
+      message: 'Compte client créé avec succès.',
       user: { id: client.id, email: client.email, name: client.name, role: 'client' },
       tokens,
     })
@@ -165,83 +103,6 @@ export async function verifyRegister(req: Request, res: Response) {
   }
 }
 
-export async function forgotPassword(req: Request, res: Response) {
-  try {
-    const parsed = forgotPasswordSchema.safeParse(req.body)
-    if (!parsed.success) return res.status(400).json({ error: 'Données invalides', details: parsed.error.errors })
-
-    const { email } = parsed.data
-    const normalizedEmail = normalizeEmail(email)
-    const user = await prisma.client.findUnique({ where: { email: normalizedEmail } }) || await prisma.admin.findUnique({ where: { email: normalizedEmail } })
-    if (!user) {
-      return res.status(200).json({ message: 'Si ce compte existe, un code de réinitialisation a été envoyé.' })
-    }
-
-    const code = generateOTP(6)
-    const expiresAt = getOtpExpiry(10)
-
-    await prisma.authOtp.create({
-      data: {
-        email: normalizedEmail,
-        type: 'RESET',
-        code,
-        expiresAt,
-      },
-    })
-
-    void sendEmail({
-      to: normalizedEmail,
-      subject: 'Réinitialisation de mot de passe Techno-logia',
-      html: emailTemplates.passwordReset(code),
-    })
-
-    res.status(200).json({ message: 'Code de réinitialisation envoyé par email.' })
-  } catch (err) {
-    console.error(err)
-    res.status(500).json({ error: 'Erreur interne' })
-  }
-}
-
-export async function resetPassword(req: Request, res: Response) {
-  try {
-    const parsed = resetPasswordSchema.safeParse(req.body)
-    if (!parsed.success) return res.status(400).json({ error: 'Données invalides', details: parsed.error.errors })
-
-    const { email, code, newPassword } = parsed.data
-    const normalizedEmail = normalizeEmail(email)
-    if (!isOtpCodeValid(code)) return res.status(400).json({ error: 'Code OTP invalide' })
-    const otp = await prisma.authOtp.findFirst({
-      where: {
-        email: normalizedEmail,
-        type: 'RESET',
-        code,
-        used: false,
-        expiresAt: { gt: new Date() },
-      },
-      orderBy: { createdAt: 'desc' },
-    })
-
-    if (!otp) return res.status(400).json({ error: 'Code OTP invalide ou expiré' })
-
-    const targetAdmin = await prisma.admin.findUnique({ where: { email: normalizedEmail } })
-    const targetClient = await prisma.client.findUnique({ where: { email: normalizedEmail } })
-    if (!targetAdmin && !targetClient) return res.status(404).json({ error: 'Compte introuvable' })
-
-    const hashedPassword = await bcrypt.hash(newPassword, 12)
-    if (targetAdmin) {
-      await prisma.admin.update({ where: { email: normalizedEmail }, data: { password: hashedPassword } })
-    } else {
-      await prisma.client.update({ where: { email: normalizedEmail }, data: { password: hashedPassword } })
-    }
-
-    await prisma.authOtp.update({ where: { id: otp.id }, data: { used: true } })
-
-    res.json({ message: 'Mot de passe réinitialisé avec succès' })
-  } catch (err) {
-    console.error(err)
-    res.status(500).json({ error: 'Erreur interne' })
-  }
-}
 
 export async function refresh(req: Request, res: Response) {
   try {

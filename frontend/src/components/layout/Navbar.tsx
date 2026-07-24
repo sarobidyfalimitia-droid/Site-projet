@@ -221,6 +221,26 @@ function Navbar() {
                 )
               )}
               <div className="pt-3 border-t border-gray-200 dark:border-gray-800 mt-2 flex flex-col gap-2">
+                {/* Theme toggle mobile */}
+                <button
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+                >
+                  {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                  {theme === 'dark' ? 'Mode clair' : 'Mode sombre'}
+                </button>
+                {/* Language selector mobile */}
+                <div className="px-3 py-2">
+                  <select
+                    value={locale}
+                    onChange={(e) => setLocale(e.target.value as any)}
+                    className="w-full bg-transparent text-sm border border-gray-200 dark:border-gray-700 rounded-lg px-2 py-1.5 text-gray-700 dark:text-gray-200"
+                  >
+                    {availableLocales.map((l) => (
+                      <option key={l.code} value={l.code}>{l.flag} {l.label}</option>
+                    ))}
+                  </select>
+                </div>
                 {isAuthenticated ? (
                   <Link href={dashboardHref} onClick={() => setOpen(false)} className="btn-primary text-center">
                     Mon espace
