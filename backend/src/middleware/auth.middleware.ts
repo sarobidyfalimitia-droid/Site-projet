@@ -1,16 +1,6 @@
 import { Request, RequestHandler, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 
-declare global {
-  namespace Express {
-    interface User {
-      id: number
-      role: 'admin' | 'client'
-      email: string
-    }
-  }
-}
-
 export interface AuthRequest extends Request {
   user?: Express.User
 }
