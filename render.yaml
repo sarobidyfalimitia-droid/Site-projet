@@ -2,17 +2,15 @@ services:
   # Backend API Service
   - type: web
     name: agency-platform-backend
-    runtime: docker
-    plan: starter
+    env: node
     region: frankfurt
-    branch: main
-    rootDir: backend
-    dockerfilePath: Dockerfile
+    buildCommand: |
+      cd backend && npm ci
+      npx prisma generate
+      npm run build
+    startCommand: cd backend && npm start
+    healthCheckPath: /api/health
     envVars:
-      - key: NODE_ENV
-        value: production
-      - key: PORT
-        value: 3001
       - key: DATABASE_URL
         fromDatabase:
           name: agency-platform-db
@@ -21,59 +19,50 @@ services:
         generateValue: true
       - key: JWT_REFRESH_SECRET
         generateValue: true
-      - key: JWT_EXPIRES_IN
-        value: 15m
-      - key: JWT_REFRESH_EXPIRES_IN
-        value: 30d
       - key: FRONTEND_URL
-        value: https://agency-platform-frontend.onrender.com
-      - key: UPLOAD_DIR
-        value: /app/uploads
+        sync: false
       - key: SMTP_HOST
-        value: smtp.gmail.com
+        sync: false
       - key: SMTP_PORT
-        value: 587
+        value: "587"
       - key: SMTP_USER
         sync: false
       - key: SMTP_PASS
         sync: false
       - key: SMTP_FROM
-        value: Techno-logia <noreply@techno-logia.fr>
-      - key: SMTP_DISABLED
-        value: "false"
-      - key: OPENROUTER_API_KEY
-        sync: false
-    healthCheckPath: /api/health
+        value: "Techno-logia <noreply@techno-logia.fr>"
     autoDeploy: true
-    disk:
-      name: uploads
-      mountPath: /app/uploads
-      sizeGB: 1
 
   # Frontend Service
   - type: web
     name: agency-platform-frontend
-    runtime: docker
-    plan: starter
+    env: node
     region: frankfurt
-    branch: main
-    rootDir: frontend
-    dockerfilePath: Dockerfile
+    buildCommand: cd frontend && npm ci && npm run build
+    startCommand: cd frontend && npm start
     envVars:
-      - key: NODE_ENV
-        value: production
       - key: NEXT_PUBLIC_API_URL
-        value: https://agency-platform-backend.onrender.com/api
+        fromService:
+          name: agency-platform-backend
+          type: web
+          property: host
+          suffix: /api
       - key: NEXT_PUBLIC_SOCKET_URL
-        value: https://agency-platform-backend.onrender.com
+        fromService:
+          name: agency-platform-backend
+          type: web
+          property: host
       - key: NEXT_PUBLIC_SITE_URL
-        value: https://agency-platform-frontend.onrender.com
-    healthCheckPath: /
+        fromService:
+          name: agency-platform-frontend
+          type: web
+          property: host
     autoDeploy: true
 
 databases:
   - name: agency-platform-db
-    plan: starter
     region: frankfurt
     databaseName: agency_platform
     user: postgres
+    plan: free
+    ipAllowList: []

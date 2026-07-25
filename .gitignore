@@ -3,6 +3,10 @@
 .env.*
 !.env.example
 
+# Render deployment files
+render-build.sh
+DEPLOYMENT.md
+
 # Certificates and private keys
 /nginx/ssl/
 *.pem

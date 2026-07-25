@@ -1,4 +1,4 @@
-import { Request, RequestHandler } from 'express'
+import { Request, RequestHandler, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 
 declare global {
@@ -11,9 +11,11 @@ declare global {
   }
 }
 
-export interface AuthRequest extends Request {}
+export interface AuthRequest extends Request {
+  user?: Express.User
+}
 
-export const authenticate: RequestHandler = (req, res, next): void => {
+export const authenticate: RequestHandler = (req: Request, res: Response, next: NextFunction): void => {
   const token = req.headers.authorization?.split(' ')[1]
   if (!token) {
     res.status(401).json({ error: 'Token manquant' })
@@ -21,7 +23,7 @@ export const authenticate: RequestHandler = (req, res, next): void => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: number; role: 'admin' | 'client'; email: string }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as Express.User
     ;(req as AuthRequest).user = decoded
     next()
   } catch {
@@ -30,7 +32,7 @@ export const authenticate: RequestHandler = (req, res, next): void => {
   }
 }
 
-export const requireAdmin: RequestHandler = (req, res, next): void => {
+export const requireAdmin: RequestHandler = (req: Request, res: Response, next: NextFunction): void => {
   if ((req as AuthRequest).user?.role !== 'admin') {
     res.status(403).json({ error: 'Accès réservé aux administrateurs' })
     return
@@ -38,7 +40,7 @@ export const requireAdmin: RequestHandler = (req, res, next): void => {
   next()
 }
 
-export const requireClient: RequestHandler = (req, res, next): void => {
+export const requireClient: RequestHandler = (req: Request, res: Response, next: NextFunction): void => {
   if (!(req as AuthRequest).user) {
     res.status(401).json({ error: 'Non authentifié' })
     return
