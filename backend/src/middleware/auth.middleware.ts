@@ -2,7 +2,11 @@ import { Request, RequestHandler, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 
 export interface AuthRequest extends Request {
+  body: any
+  query: any
   user?: Express.User
+  file?: Express.Multer.File
+  files?: Express.Multer.File[]
 }
 
 export const authenticate: RequestHandler = (req: Request, res: Response, next: NextFunction): void => {
