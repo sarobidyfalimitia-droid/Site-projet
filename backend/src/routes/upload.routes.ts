@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   limits: { fileSize: 10 * 1024 * 1024 },
-  fileFilter: (_req: any, file: Express.Multer.File, cb: FileFilterCallback) => {
+  fileFilter: (_req: any, file: multer.File, cb: FileFilterCallback) => {
     const allowed = /jpeg|jpg|png|gif|webp|pdf|doc|docx/
     const ext = allowed.test(path.extname(file.originalname).toLowerCase())
     const mime = allowed.test(file.mimetype)
@@ -36,7 +36,7 @@ router.post('/', authenticate, upload.single('file') as unknown as RequestHandle
   res.json({ url: `/uploads/${req.file.filename}`, filename: req.file.originalname, size: req.file.size, mimetype: req.file.mimetype })
 })
 
-router.post('/multiple', authenticate, upload.array('files', 10) as unknown as RequestHandler, (req: AuthRequest & { files?: Express.Multer.File[] }, res) => {
+router.post('/multiple', authenticate, upload.array('files', 10) as unknown as RequestHandler, (req: AuthRequest & { files?: multer.File[] }, res) => {
   const files = req.files
   if (!files?.length) return res.status(400).json({ error: 'Aucun fichier fourni' })
   res.json(files.map(f => ({ url: `/uploads/${f.filename}`, filename: f.originalname, size: f.size, mimetype: f.mimetype })))
