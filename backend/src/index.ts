@@ -25,6 +25,9 @@ import dashboardRoutes from './routes/dashboard.routes'
 const app = express()
 const httpServer = createServer(app)
 
+// Trust proxy for rate limiting (Render uses proxies)
+app.set('trust proxy', 1)
+
 // ─── Socket.io ────────────────────────────────────────────────────────────────
 export const io = new Server(httpServer, {
   cors: {
