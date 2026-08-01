@@ -13,12 +13,12 @@
 
 | Champ | Valeur |
 |-------|--------|
-| **Name** | `agency-platform-frontend` |
+| **Name** | `technologia` |
 | **Environment** | `Node` |
 | **Region** | `Frankfurt` (ou le plus proche) |
 | **Branch** | `main` |
 | **Root Directory** | `frontend` |
-| **Build Command** | `npm ci --include=dev && npm run build` |
+| **Build Command** | `npm install && npm run build` |
 | **Start Command** | `npm start` |
 
 ---
@@ -29,47 +29,14 @@
 
 Ajouter ces variables **UNE PAR UNE** dans **Environment** :
 
-#### 1. NEXT_PUBLIC_API_URL
-```
-Key: NEXT_PUBLIC_API_URL
-Value: https://techno-logia.onrender.com/api
-Sync: ❌ Décocher "Sync"
-```
-
-#### 2. NEXT_PUBLIC_SOCKET_URL
-```
-Key: NEXT_PUBLIC_SOCKET_URL
-Value: https://techno-logia.onrender.com
-Sync: ❌ Décocher "Sync"
-```
-
-#### 3. NEXT_PUBLIC_SITE_URL
-```
-Key: NEXT_PUBLIC_SITE_URL
-Value: https://agency-platform-frontend.onrender.com
-Sync: ❌ Décocher "Sync"
-```
-
-#### 4. NEXT_PUBLIC_GOOGLE_CLIENT_ID
+#### 1. NEXT_PUBLIC_GOOGLE_CLIENT_ID
 ```
 Key: NEXT_PUBLIC_GOOGLE_CLIENT_ID
-Value: [VOTRE CLIENT ID GOOGLE]
+Value: 34611556379-lr44pkemafl45msln71mkfnobgt02bm3.apps.googleusercontent.com
 Sync: ❌ Décocher "Sync"
 ```
 
-**Comment obtenir le Google Client ID ?**
-1. Aller sur https://console.cloud.google.com
-2. Sélectionner votre projet
-3. **APIs & Services** → **Credentials**
-4. Cliquer sur votre OAuth 2.0 Client ID
-5. Copier le **Client ID** (ex: `123456789-abc123def456.apps.googleusercontent.com`)
-
-#### 5. NODE_ENV
-```
-Key: NODE_ENV
-Value: production
-Sync: ✅ Laisser coché
-```
+**Note** : Les autres variables (NEXT_PUBLIC_API_URL, NEXT_PUBLIC_SOCKET_URL, NEXT_PUBLIC_SITE_URL, NODE_ENV) seront automatiquement remplies par Render si vous utilisez le render.yaml.
 
 ---
 
@@ -80,20 +47,16 @@ Aller sur le service `agency-platform-backend` → **Environment** :
 #### 1. GOOGLE_CLIENT_ID
 ```
 Key: GOOGLE_CLIENT_ID
-Value: [MÊME CLIENT ID QUE LE FRONTEND]
+Value: 34611556379-lr44pkemafl45msln71mkfnobgt02bm3.apps.googleusercontent.com
 Sync: ❌ Décocher "Sync"
 ```
 
 #### 2. GOOGLE_CLIENT_SECRET
 ```
 Key: GOOGLE_CLIENT_SECRET
-Value: [VOTRE CLIENT SECRET GOOGLE]
+Value: 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
 Sync: ❌ Décocher "Sync"
 ```
-
-**Où trouver le Client Secret ?**
-1. Même endroit que le Client ID (Google Cloud Console)
-2. C'est la valeur qui commence par `GOCSPX-...`
 
 #### 3. GOOGLE_CALLBACK_URL
 ```
@@ -105,7 +68,7 @@ Sync: ❌ Décocher "Sync"
 #### 4. FRONTEND_URL
 ```
 Key: FRONTEND_URL
-Value: https://agency-platform-frontend.onrender.com
+Value: https://technologia.onrender.com
 Sync: ❌ Décocher "Sync"
 ```
 
@@ -125,7 +88,7 @@ Sync: ❌ Décocher "Sync"
 
 5. Section **"Authorized JavaScript origins"** :
    ```
-   https://agency-platform-frontend.onrender.com
+   https://technologia.onrender.com
    ```
 
 6. Cliquer sur **"Save"**
@@ -136,15 +99,12 @@ Sync: ❌ Décocher "Sync"
 
 ### Frontend
 - [ ] Créer Web Service (pas Static Site)
-- [ ] Name: `agency-platform-frontend`
+- [ ] Name: `technologia`
 - [ ] Root Directory: `frontend`
-- [ ] Build Command: `npm ci --include=dev && npm run build`
+- [ ] Build Command: `npm install && npm run build`
 - [ ] Start Command: `npm start`
-- [ ] Variable: `NEXT_PUBLIC_API_URL`
-- [ ] Variable: `NEXT_PUBLIC_SOCKET_URL`
-- [ ] Variable: `NEXT_PUBLIC_SITE_URL`
 - [ ] Variable: `NEXT_PUBLIC_GOOGLE_CLIENT_ID`
-- [ ] Variable: `NODE_ENV`
+- [ ] Autres variables: automatiques via render.yaml
 
 ### Backend
 - [ ] Variable: `GOOGLE_CLIENT_ID`
@@ -154,14 +114,14 @@ Sync: ❌ Décocher "Sync"
 
 ### Google Cloud Console
 - [ ] Authorized redirect URI: `https://techno-logia.onrender.com/api/auth/google/callback`
-- [ ] Authorized JavaScript origin: `https://agency-platform-frontend.onrender.com`
+- [ ] Authorized JavaScript origin: `https://technologia.onrender.com`
 
 ---
 
 ## 🎯 Après le déploiement
 
 1. Attendre 2-3 minutes pour le build
-2. Vérifier le frontend : https://agency-platform-frontend.onrender.com
+2. Vérifier le frontend : https://technologia.onrender.com
 3. Tester la connexion classique
 4. Tester la connexion Google
 5. Vérifier les redirections
@@ -172,19 +132,15 @@ Sync: ❌ Décocher "Sync"
 
 ### Frontend
 ```
-NEXT_PUBLIC_API_URL=https://techno-logia.onrender.com/api
-NEXT_PUBLIC_SOCKET_URL=https://techno-logia.onrender.com
-NEXT_PUBLIC_SITE_URL=https://agency-platform-frontend.onrender.com
-NEXT_PUBLIC_GOOGLE_CLIENT_ID=votre-client-id-google
-NODE_ENV=production
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=34611556379-lr44pkemafl45msln71mkfnobgt02bm3.apps.googleusercontent.com
 ```
 
 ### Backend
 ```
-GOOGLE_CLIENT_ID=votre-client-id-google
-GOOGLE_CLIENT_SECRET=votre-client-secret-google
+GOOGLE_CLIENT_ID=34611556379-lr44pkemafl45msln71mkfnobgt02bm3.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=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
 GOOGLE_CALLBACK_URL=https://techno-logia.onrender.com/api/auth/google/callback
-FRONTEND_URL=https://agency-platform-frontend.onrender.com
+FRONTEND_URL=https://technologia.onrender.com
 ```
 
 ---
@@ -193,4 +149,4 @@ FRONTEND_URL=https://agency-platform-frontend.onrender.com
 
 - **Client ID** : Même valeur pour frontend ET backend
 - **Client Secret** : Seulement sur le backend (jamais exposé)
-- **URLs** : Remplacer `agency-platform-frontend.onrender.com` par votre vraie URL Render
+- **URLs** : Le frontend est maintenant sur `https://technologia.onrender.com`

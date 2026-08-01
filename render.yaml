@@ -37,7 +37,7 @@ services:
 
   # Frontend Service
   - type: web
-    name: agency-platform-frontend
+    name: technologia
     runtime: node
     region: frankfurt
     buildCommand: cd frontend && npm install && npm run build
@@ -56,7 +56,7 @@ services:
           property: host
       - key: NEXT_PUBLIC_SITE_URL
         fromService:
-          name: agency-platform-frontend
+          name: technologia
           type: web
           property: host
       - key: NEXT_PUBLIC_GOOGLE_CLIENT_ID
