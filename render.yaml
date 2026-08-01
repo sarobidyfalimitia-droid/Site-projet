@@ -2,7 +2,7 @@ services:
   # Backend API Service
   - type: web
     name: agency-platform-backend
-    env: node
+    runtime: node
     region: frankfurt
     buildCommand: |
       cd backend && npm ci --include=dev
@@ -38,7 +38,7 @@ services:
   # Frontend Service
   - type: web
     name: agency-platform-frontend
-    env: node
+    runtime: node
     region: frankfurt
     buildCommand: cd frontend && npm ci --include=dev && npm run build
     startCommand: cd frontend && npm start
@@ -59,6 +59,8 @@ services:
           name: agency-platform-frontend
           type: web
           property: host
+      - key: NEXT_PUBLIC_GOOGLE_CLIENT_ID
+        sync: false
       - key: NODE_ENV
         value: production
     autoDeploy: true
