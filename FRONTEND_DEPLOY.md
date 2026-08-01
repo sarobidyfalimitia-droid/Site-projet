@@ -32,7 +32,7 @@ Ajouter ces variables **UNE PAR UNE** dans **Environment** :
 #### 1. NEXT_PUBLIC_GOOGLE_CLIENT_ID
 ```
 Key: NEXT_PUBLIC_GOOGLE_CLIENT_ID
-Value: 34611556379-lr44pkemafl45msln71mkfnobgt02bm3.apps.googleusercontent.com
+Value: [VOTRE_CLIENT_ID_GOOGLE]
 Sync: ❌ Décocher "Sync"
 ```
 
@@ -47,14 +47,14 @@ Aller sur le service `agency-platform-backend` → **Environment** :
 #### 1. GOOGLE_CLIENT_ID
 ```
 Key: GOOGLE_CLIENT_ID
-Value: 34611556379-lr44pkemafl45msln71mkfnobgt02bm3.apps.googleusercontent.com
+Value: [VOTRE_CLIENT_ID_GOOGLE]
 Sync: ❌ Décocher "Sync"
 ```
 
 #### 2. GOOGLE_CLIENT_SECRET
 ```
 Key: GOOGLE_CLIENT_SECRET
-Value: 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
+Value: [VOTRE_CLIENT_SECRET_GOOGLE]
 Sync: ❌ Décocher "Sync"
 ```
 
@@ -132,13 +132,13 @@ Sync: ❌ Décocher "Sync"
 
 ### Frontend
 ```
-NEXT_PUBLIC_GOOGLE_CLIENT_ID=34611556379-lr44pkemafl45msln71mkfnobgt02bm3.apps.googleusercontent.com
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=[VOTRE_CLIENT_ID_GOOGLE]
 ```
 
 ### Backend
 ```
-GOOGLE_CLIENT_ID=34611556379-lr44pkemafl45msln71mkfnobgt02bm3.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=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
+GOOGLE_CLIENT_ID=[VOTRE_CLIENT_ID_GOOGLE]
+GOOGLE_CLIENT_SECRET=[VOTRE_CLIENT_SECRET_GOOGLE]
 GOOGLE_CALLBACK_URL=https://techno-logia.onrender.com/api/auth/google/callback
 FRONTEND_URL=https://technologia.onrender.com
 ```
@@ -150,3 +150,4 @@ FRONTEND_URL=https://technologia.onrender.com
 - **Client ID** : Même valeur pour frontend ET backend
 - **Client Secret** : Seulement sur le backend (jamais exposé)
 - **URLs** : Le frontend est maintenant sur `https://technologia.onrender.com`
+- **Où trouver les valeurs** : Google Cloud Console → APIs & Services → Credentials
