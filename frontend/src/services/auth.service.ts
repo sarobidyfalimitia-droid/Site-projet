@@ -7,14 +7,8 @@ export const authService = {
     return data
   },
 
-  // register returns a message (OTP sent). Complete registration with verifyRegister.
   async register(payload: RegisterData): Promise<any> {
     const { data } = await api.post('/auth/register', payload)
-    return data
-  },
-
-  async verifyRegister(email: string, code: string): Promise<AuthResponse> {
-    const { data } = await api.post('/auth/register/verify', { email, code })
     return data
   },
 

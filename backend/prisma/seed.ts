@@ -11,7 +11,7 @@ async function main() {
   const admin = await prisma.admin.upsert({
     where: { email: 'admin@techno-logia.fr' },
     update: {},
-    create: { email: 'admin@techno-logia.fr', password: adminPassword, name: 'Super Admin' },
+    create: { email: 'admin@techno-logia.fr', password: adminPassword },
   })
   console.log('✅ Admin created:', admin.email)
 
@@ -41,6 +41,8 @@ async function main() {
       slug: 'plateforme-ecommerce-premium',
       excerpt: 'Une boutique en ligne complète avec gestion des stocks, paiement sécurisé et tableau de bord avancé.',
       description: '<p>Développement complet d\'une plateforme e-commerce avec Next.js, intégration Stripe, gestion des stocks en temps réel et dashboard analytics.</p>',
+      coverImage: '/placeholder.jpg',
+      images: [],
       technologies: ['Next.js', 'TypeScript', 'PostgreSQL', 'Stripe', 'Tailwind CSS'],
       published: true, featured: true,
       categoryId: categories[3].id,
@@ -51,6 +53,8 @@ async function main() {
       slug: 'application-mobile-fitness',
       excerpt: 'Application mobile cross-platform pour le suivi d\'entraînement et la nutrition.',
       description: '<p>Application React Native avec suivi GPS, plans d\'entraînement personnalisés et analyse des performances.</p>',
+      coverImage: '/placeholder.jpg',
+      images: [],
       technologies: ['React Native', 'Node.js', 'PostgreSQL', 'Socket.io'],
       published: true, featured: true,
       categoryId: categories[1].id,
@@ -61,6 +65,8 @@ async function main() {
       slug: 'dashboard-saas-analytics',
       excerpt: 'Tableau de bord analytique temps réel pour startups B2B avec visualisations avancées.',
       description: '<p>SaaS analytics avec graphiques interactifs, rapports automatisés et intégration multi-sources de données.</p>',
+      coverImage: '/placeholder.jpg',
+      images: [],
       technologies: ['React', 'Node.js', 'PostgreSQL', 'Chart.js', 'Redis'],
       published: true, featured: true,
       categoryId: categories[4].id,
@@ -79,9 +85,9 @@ async function main() {
 
   // Team members
   const teamMembers = [
-    { name: 'Alexandre Martin', role: 'Lead Developer & Fondateur', bio: 'Full-stack developer avec 10 ans d\'expérience. Passionné par les architectures scalables et les nouvelles technologies.', skills: ['Next.js', 'Node.js', 'PostgreSQL', 'AWS', 'TypeScript'], published: true, featured: true },
-    { name: 'Sophie Laurent', role: 'UI/UX Designer Senior', bio: 'Designer créative spécialisée en design système et expérience utilisateur. Adepte du design minimaliste et fonctionnel.', skills: ['Figma', 'Framer', 'Tailwind', 'Motion Design', 'Design System'], published: true, featured: true },
-    { name: 'Thomas Bernard', role: 'Backend Developer', bio: 'Expert en architecture backend, APIs RESTful et microservices. Spécialiste en optimisation de bases de données.', skills: ['Node.js', 'PostgreSQL', 'Docker', 'Redis', 'GraphQL'], published: true, featured: false },
+    { name: 'Alexandre Martin', role: 'Lead Developer & Fondateur', bio: 'Full-stack developer avec 10 ans d\'expérience. Passionné par les architectures scalables et les nouvelles technologies.', photo: '/placeholder.jpg', skills: ['Next.js', 'Node.js', 'PostgreSQL', 'AWS', 'TypeScript'], socials: [], published: true, featured: true },
+    { name: 'Sophie Laurent', role: 'UI/UX Designer Senior', bio: 'Designer créative spécialisée en design système et expérience utilisateur. Adepte du design minimaliste et fonctionnel.', photo: '/placeholder.jpg', skills: ['Figma', 'Framer', 'Tailwind', 'Motion Design', 'Design System'], socials: [], published: true, featured: true },
+    { name: 'Thomas Bernard', role: 'Backend Developer', bio: 'Expert en architecture backend, APIs RESTful et microservices. Spécialiste en optimisation de bases de données.', photo: '/placeholder.jpg', skills: ['Node.js', 'PostgreSQL', 'Docker', 'Redis', 'GraphQL'], socials: [], published: true, featured: false },
   ]
 
   for (const m of teamMembers) {

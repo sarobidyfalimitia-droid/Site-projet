@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Eye, EyeOff, Loader2, Mail, Lock } from 'lucide-react'
+import { Eye, EyeOff, Loader2, Mail, Lock, Chrome } from 'lucide-react'
 import { useAuthStore } from '@/store/auth.store'
 import { authService } from '@/services/auth.service'
 import toast from 'react-hot-toast'
@@ -32,8 +32,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false)
   const [mode, setMode] = useState<'login' | 'register'>('login')
   const [registerForm, setRegisterForm] = useState({ name: '', email: '', password: '', confirmPassword: '', company: '', phonePrefix: '+33', phoneNumber: '' })
-  const [otpStep, setOtpStep] = useState(false)
-  const [otpCode, setOtpCode] = useState('')
   const [registeredEmail, setRegisteredEmail] = useState('')
 
   const resetForms = () => {
@@ -147,7 +145,6 @@ export default function LoginPage() {
         phonePrefix: registerData.phonePrefix,
         phoneNumber: registerData.phoneNumber?.trim() || undefined,
         company: normalizedRegisterData.company,
-        skipOtp: true,
       } as any)
 
       if (response?.tokens && response?.user) {
@@ -159,9 +156,10 @@ export default function LoginPage() {
         return
       }
 
+      // Si pas de tokens, inscription réussie mais nécessite peut-être une vérification
       setRegisteredEmail(normalizedRegisterData.email)
-      setOtpStep(true)
-      toast.success('Code de vérification envoyé par email.')
+      toast.success('Compte créé avec succès ! Vous pouvez vous connecter.')
+      setMode('login')
     } catch (err: any) {
       const message = err?.response?.data?.error || 'Erreur lors de la création du compte'
       setErrors({ general: message })
@@ -170,36 +168,6 @@ export default function LoginPage() {
       setLoading(false)
     }
   }
-
-  const handleVerifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const normalizedEmail = registeredEmail.trim().toLowerCase()
-    const normalizedOtpCode = otpCode.trim()
-    if (!normalizedEmail) return setErrors({ general: 'Email manquant' })
-    if (!normalizedOtpCode || normalizedOtpCode.length !== 6) return setErrors({ general: 'Code OTP invalide' })
-    setLoading(true)
-    try {
-      const data = await authService.verifyRegister(normalizedEmail, normalizedOtpCode)
-      setTokens(data.tokens)
-      setUser(data.user)
-      resetForms()
-      setOtpStep(false)
-      setRegisteredEmail('')
-      setOtpCode('')
-      toast.success('Inscription confirmée — bienvenue !')
-      router.push(redirect ?? '/client')
-    } catch (err: any) {
-      const message = err?.response?.data?.error || 'Code OTP invalide'
-      setErrors({ general: message })
-      toast.error(message)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    resetForms()
-  }, [])
 
   useEffect(() => {
     resetForms()
@@ -298,23 +266,25 @@ export default function LoginPage() {
                 <p className="text-right text-sm mt-2"><Link href="/auth/forgot-password" className="text-primary-500">Mot de passe oublié ?</Link></p>
               </div>
 
-              <button
-                type="button"
-                onClick={() => {
-                  const devAdminUser = {
-                    id: 1,
-                    email: 'admin@techno-logia.fr',
-                    name: 'Admin local',
-                    role: 'admin' as const,
-                  }
-                  useAuthStore.getState().setUser(devAdminUser)
-                  useAuthStore.getState().setTokens({ accessToken: 'dev-admin-token', refreshToken: 'dev-admin-refresh' })
-                  router.push('/admin?devAdmin=1')
-                }}
-                className="w-full rounded-xl border border-primary-200 bg-primary-50 px-4 py-2.5 text-sm font-medium text-primary-700 transition hover:bg-primary-100 dark:border-primary-900/40 dark:bg-primary-950/40 dark:text-primary-300"
-              >
-                Accès admin local
-              </button>
+              {process.env.NODE_ENV !== 'production' && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    const devAdminUser = {
+                      id: 1,
+                      email: 'admin@techno-logia.fr',
+                      name: 'Admin local',
+                      role: 'admin' as const,
+                    }
+                    useAuthStore.getState().setUser(devAdminUser)
+                    useAuthStore.getState().setTokens({ accessToken: 'dev-admin-token', refreshToken: 'dev-admin-refresh' })
+                    router.push('/admin?devAdmin=1')
+                  }}
+                  className="w-full rounded-xl border border-primary-200 bg-primary-50 px-4 py-2.5 text-sm font-medium text-primary-700 transition hover:bg-primary-100 dark:border-primary-900/40 dark:bg-primary-950/40 dark:text-primary-300"
+                >
+                  Accès admin local (dev)
+                </button>
+              )}
 
               <button
                 type="submit"
@@ -323,8 +293,27 @@ export default function LoginPage() {
               >
                 {loading ? <><Loader2 size={16} className="animate-spin" /> Connexion…</> : 'Se connecter'}
               </button>
+
+              {/* Séparateur */}
+              <div className="relative py-4">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-200 dark:border-gray-700"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-4 bg-white dark:bg-gray-900 text-gray-500">Ou continuer avec</span>
+                </div>
+              </div>
+
+              {/* Bouton Google */}
+              <a
+                href={`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '') || 'http://localhost:3001'}/api/auth/google`}
+                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 flex items-center justify-center gap-2"
+              >
+                <Chrome size={18} />
+                Se connecter avec Google
+              </a>
             </form>
-          ) : !otpStep ? (
+          ) : (
             <form onSubmit={handleRegister} className="space-y-4">
               {errors.general && <p className="text-red-500 text-sm text-center">{errors.general}</p>}
               <div className="grid grid-cols-2 gap-4">
@@ -438,42 +427,6 @@ export default function LoginPage() {
               >
                 {loading ? <><Loader2 size={16} className="animate-spin" /> Création…</> : 'Créer mon compte'}
               </button>
-            </form>
-          ) : (
-            <form onSubmit={handleVerifyOtp} className="space-y-4">
-              {errors.general && <p className="text-red-500 text-sm text-center">{errors.general}</p>}
-              <p className="text-sm text-gray-600">Un code a été envoyé à <strong>{registeredEmail}</strong>. Entrez-le pour confirmer votre compte.</p>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Code OTP</label>
-                <input
-                  type="text"
-                  value={otpCode}
-                  onChange={(e) => setOtpCode(e.target.value)}
-                  placeholder="123456"
-                  className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm"
-                  required
-                />
-              </div>
-              <div className="flex gap-2">
-                <button type="submit" disabled={loading} className="btn-primary flex-1">{loading ? 'Vérification…' : 'Vérifier le code'}</button>
-                <button type="button" onClick={async () => {
-                  setLoading(true)
-                  try {
-                    await authService.register({
-                      name: registerForm.name.trim(),
-                      email: registerForm.email.trim().toLowerCase(),
-                      password: registerForm.password,
-                      company: registerForm.company.trim() || undefined,
-                      phonePrefix: registerForm.phonePrefix,
-                      phoneNumber: registerForm.phoneNumber.trim() || undefined,
-                    })
-                    toast.success('Code renvoyé')
-                  } catch (err) {
-                    toast.error('Erreur lors du renvoi')
-                  } finally { setLoading(false) }
-                }} className="btn-outline">Renvoyer</button>
-              </div>
-              <p className="text-center text-sm"><button type="button" onClick={() => { setOtpStep(false); setRegisteredEmail('') }} className="text-sm text-gray-500">Annuler</button></p>
             </form>
           )}
 

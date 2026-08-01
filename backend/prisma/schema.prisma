@@ -80,7 +80,6 @@ model Client {
   quotes       Quote[]
 }
 
-
 model Contract {
   id          Int            @id @default(autoincrement())
   title       String
