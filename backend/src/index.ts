@@ -9,7 +9,7 @@ import path from 'path'
 import passport from 'passport'
 
 import authRoutes from './routes/auth.routes'
-import './src/passport/google.strategy'
+import './passport/google.strategy'
 import { validateInput, preventXSS, securityHeaders, securityLogger, detectSuspiciousActivity } from './middleware/security.middleware'
 import projectRoutes from './routes/project.routes'
 import categoryRoutes from './routes/category.routes'
