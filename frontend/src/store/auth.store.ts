@@ -1,4 +1,4 @@
-import { create } from 'zustand'
+s identifier l'erreur import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import Cookies from 'js-cookie'
 import { authService } from '@/services/auth.service'
@@ -40,7 +40,7 @@ export const useAuthStore = create<AuthState>()(
           if (isDevAdminOverride || (process.env.NODE_ENV !== 'production' && isLocalhost)) {
             const devAdminUser: AuthUser = {
               id: 1,
-              email: 'admin@techno-logia.fr',
+              email: 'emittechno-logia@admin.fr',
               name: 'Admin local',
               role: 'admin',
             }

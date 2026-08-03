@@ -15,8 +15,8 @@ console.log('4. Le schéma Prisma a des incohérences\n');
 console.log('✅ SOLUTION: Créer un vrai compte admin dans la base de données');
 console.log('\n📋 IDENTIFIANTS ADMIN PAR DÉFAUT:');
 console.log('================================');
-console.log('Email:    admin@techno-logia.fr');
-console.log('Mot de passe: admin123');
+console.log('Email:    emittechno-logia@admin.fr');
+console.log('Mot de passe: techno-logiaemit2000');
 console.log('================================\n');
 
 console.log('🔧 MÉTHODES POUR CRÉER LE COMPTE ADMIN:');
@@ -52,7 +52,7 @@ console.log('   - backend/prisma/schema.prisma (schéma DB)');
 console.log('   - backend/prisma/seed.ts (données initiales)');
 
 console.log('\n✅ RÉSUMÉ:');
-console.log('   - Les identifiants admin sont: admin@techno-logia.fr / admin123');
+console.log('   - Les identifiants admin sont: emittechno-logia@admin.fr / techno-logiaemit2000');
 console.log('   - Le champ refreshToken doit être NULL (toujours vide)');
 console.log('   - Pour un vrai compte, la base de données doit être configurée');
 console.log('   - Pour un accès rapide, utilisez "Accès admin local" sur la page de login');

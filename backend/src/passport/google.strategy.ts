@@ -27,7 +27,7 @@ passport.use(new GoogleStrategy({
       })
     }
 
-    return done(null, { id: user.id, email: user.email, role: 'client' })
+    return done(null, { id: user.id, email: user.email, role: 'client' } as any)
   } catch (err) {
     return done(err, false)
   }

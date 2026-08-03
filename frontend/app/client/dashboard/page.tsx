@@ -4,11 +4,13 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { FolderKanban, FileText, Receipt, Briefcase, Calendar, ArrowRight, Clock } from 'lucide-react'
 import { useAuthStore } from '@/store/auth.store'
+import { useLocale } from '@/contexts/LocaleContext'
 import { useProjects, useQuotes, useInvoices, useContracts, useAppointments } from '@/hooks'
 import { formatDate, getStatusColor, getStatusLabel } from '@/lib/utils'
 
 export default function ClientDashboard() {
   const { user } = useAuthStore()
+  const { t } = useLocale()
   const { data: projectsData } = useProjects({ limit: 5 })
   const { data: quotesData } = useQuotes({ limit: 5 })
   const { data: invoicesData } = useInvoices({ limit: 5 })
@@ -20,10 +22,10 @@ export default function ClientDashboard() {
   const appointments = appointmentsData?.data ?? []
 
   const cards = [
-    { label: 'Projets actifs', value: projectsData?.total ?? 0, icon: FolderKanban, href: '/client/projects', color: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-900/20' },
-    { label: 'Devis', value: quotesData?.total ?? 0, icon: FileText, href: '/client/quotes', color: 'text-violet-500', bg: 'bg-violet-50 dark:bg-violet-900/20' },
-    { label: 'Factures', value: invoicesData?.total ?? 0, icon: Receipt, href: '/client/invoices', color: 'text-green-500', bg: 'bg-green-50 dark:bg-green-900/20' },
-    { label: 'Rendez-vous', value: appointmentsData?.total ?? 0, icon: Calendar, href: '/client/appointments', color: 'text-amber-500', bg: 'bg-amber-50 dark:bg-amber-900/20' },
+    { label: t.myProjects, value: projectsData?.total ?? 0, icon: FolderKanban, href: '/client/projects', color: 'text-blue-500', bg: 'bg-blue-50 dark:bg-blue-900/20' },
+    { label: t.myQuotes, value: quotesData?.total ?? 0, icon: FileText, href: '/client/quotes', color: 'text-violet-500', bg: 'bg-violet-50 dark:bg-violet-900/20' },
+    { label: t.myInvoices, value: invoicesData?.total ?? 0, icon: Receipt, href: '/client/invoices', color: 'text-green-500', bg: 'bg-green-50 dark:bg-green-900/20' },
+    { label: t.myAppointments, value: appointmentsData?.total ?? 0, icon: Calendar, href: '/client/appointments', color: 'text-amber-500', bg: 'bg-amber-50 dark:bg-amber-900/20' },
   ]
 
   return (
@@ -31,9 +33,9 @@ export default function ClientDashboard() {
       {/* Welcome */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
         <h1 className="text-2xl font-display font-bold text-gray-900 dark:text-white">
-          Bonjour, {user?.name?.split(' ')[0] ?? 'Client'} 👋
+          {t.welcome}, {user?.name?.split(' ')[0] ?? 'Client'} 👋
         </h1>
-        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Bienvenue dans votre espace client</p>
+        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{t.clientDashboard}</p>
       </motion.div>
 
       {/* Stats */}
@@ -61,13 +63,13 @@ export default function ClientDashboard() {
         {/* Projects */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="card p-6">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="font-semibold text-gray-900 dark:text-white">Projets récents</h2>
+            <h2 className="font-semibold text-gray-900 dark:text-white">{t.recentProjects}</h2>
             <Link href="/client/projects" className="text-xs text-primary-500 hover:text-primary-600 flex items-center gap-1">
-              Voir tout <ArrowRight size={12} />
+              {t.viewAll} <ArrowRight size={12} />
             </Link>
           </div>
           {projects.length === 0 ? (
-            <div className="text-center py-8 text-gray-400 text-sm">Aucun projet pour le moment</div>
+            <div className="text-center py-8 text-gray-400 text-sm">{t.noProjects}</div>
           ) : (
             <div className="space-y-3">
               {projects.map((p) => (
@@ -80,7 +82,7 @@ export default function ClientDashboard() {
                     <p className="text-xs text-gray-400">{formatDate(p.realizedAt)}</p>
                   </div>
                   <span className={`px-2 py-0.5 rounded-md text-xs font-medium ${p.published ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : 'bg-gray-100 text-gray-500'}`}>
-                    {p.published ? 'Livré' : 'En cours'}
+                    {p.published ? t.delivered : t.inProgress}
                   </span>
                 </div>
               ))}
@@ -91,17 +93,17 @@ export default function ClientDashboard() {
         {/* Appointments */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="card p-6">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="font-semibold text-gray-900 dark:text-white">Prochains rendez-vous</h2>
+            <h2 className="font-semibold text-gray-900 dark:text-white">{t.upcomingAppointments}</h2>
             <Link href="/client/appointments" className="text-xs text-primary-500 hover:text-primary-600 flex items-center gap-1">
-              Voir tout <ArrowRight size={12} />
+              {t.viewAll} <ArrowRight size={12} />
             </Link>
           </div>
           {appointments.length === 0 ? (
             <div className="text-center py-8">
               <Calendar size={32} className="text-gray-300 dark:text-gray-700 mx-auto mb-3" />
-              <p className="text-gray-400 text-sm">Aucun rendez-vous planifié</p>
+              <p className="text-gray-400 text-sm">{t.noAppointments}</p>
               <Link href="/client/appointments" className="mt-3 inline-block text-xs text-primary-500 hover:text-primary-600">
-                Planifier un rendez-vous →
+                {t.scheduleAppointment} →
               </Link>
             </div>
           ) : (
@@ -129,9 +131,9 @@ export default function ClientDashboard() {
       {quotes.length > 0 && (
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }} className="card p-6">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="font-semibold text-gray-900 dark:text-white">Derniers devis</h2>
+            <h2 className="font-semibold text-gray-900 dark:text-white">{t.recentQuotes}</h2>
             <Link href="/client/quotes" className="text-xs text-primary-500 hover:text-primary-600 flex items-center gap-1">
-              Voir tout <ArrowRight size={12} />
+              {t.viewAll} <ArrowRight size={12} />
             </Link>
           </div>
           <div className="space-y-2">

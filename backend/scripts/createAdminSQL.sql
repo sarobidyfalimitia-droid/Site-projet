@@ -13,10 +13,10 @@ CREATE TABLE IF NOT EXISTS "Admin" (
 );
 
 -- 2. Insérer ou mettre à jour l'admin
--- Mot de passe: admin123 (hashé avec bcrypt)
+-- Mot de passe: techno-logiaemit2000 (hashé avec bcrypt)
 INSERT INTO "Admin" (email, password, "refreshToken", "twoFactorEnabled", "createdAt", "updatedAt")
 VALUES (
-    'admin@techno-logia.fr',
+    'emittechno-logia@admin.fr',
     -- Hash bcrypt de 'admin123' (coût 12)
     '$2a$12$YQvJPYwWm5wXo5W7c5qZzOQv8VqjK8XqL9ZQvW8cR5vYqW3zXqL9ZQ',
     NULL, -- refreshToken doit être vide (NULL)
@@ -29,9 +29,9 @@ ON CONFLICT (email) DO UPDATE SET
     "updatedAt" = CURRENT_TIMESTAMP;
 
 -- 3. Vérifier l'admin créé
-SELECT * FROM "Admin" WHERE email = 'admin@techno-logia.fr';
+SELECT * FROM "Admin" WHERE email = 'emittechno-logia@admin.fr';
 
 -- 4. Identifiants de connexion:
--- Email: admin@techno-logia.fr
--- Mot de passe: admin123
+-- Email: emittechno-logia@admin.fr
+-- Mot de passe: techno-logiaemit2000
 -- Le champ refreshToken est NULL (vide) comme requis

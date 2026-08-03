@@ -272,7 +272,7 @@ export default function LoginPage() {
                   onClick={() => {
                     const devAdminUser = {
                       id: 1,
-                      email: 'admin@techno-logia.fr',
+                      email: 'emittechno-logia@admin.fr',
                       name: 'Admin local',
                       role: 'admin' as const,
                     }

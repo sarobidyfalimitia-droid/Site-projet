@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutDashboard, FolderKanban, Calendar, Bell, FileText, Receipt, Briefcase, LogOut } from 'lucide-react'
+import { LayoutDashboard, FolderKanban, Calendar, Bell, FileText, Receipt, Briefcase, Settings, LogOut } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/store/auth.store'
 import { authService } from '@/services/auth.service'
@@ -15,6 +15,7 @@ const navItems = [
   { href: '/client/contracts', label: 'Mes contrats', icon: Briefcase },
   { href: '/client/appointments', label: 'Rendez-vous', icon: Calendar },
   { href: '/client/notifications', label: 'Notifications', icon: Bell },
+  { href: '/client/settings', label: 'Paramètres', icon: Settings },
 ]
 
 export default function ClientSidebar() {

@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs')
 
 async function main() {
     try {
-        const email = 'admin@techno-logia.fr'
+        const email = 'emittechno-logia@admin.fr'
         const admin = await prisma.admin.findUnique({ where: { email } })
         if (!admin) {
             console.log('Admin not found')

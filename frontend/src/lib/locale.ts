@@ -10,6 +10,7 @@ export const defaultLocale: LocaleCode = 'fr'
 
 export const translations = {
     fr: {
+        // Navigation
         home: 'Accueil',
         projects: 'Projets',
         services: 'Services',
@@ -20,7 +21,8 @@ export const translations = {
         team: 'Équipe',
         blog: 'Blog',
         contact: 'Contact',
-        requestQuote: 'Demander un devis',
+        
+        // Auth
         login: 'Connexion',
         createAccount: 'Créer un compte',
         mySpace: 'Mon espace',
@@ -45,8 +47,137 @@ export const translations = {
         passwordResetSent: 'Code de réinitialisation envoyé par email.',
         passwordResetSuccess: 'Mot de passe mis à jour, vous pouvez vous connecter.',
         backToSite: '← Retour au site',
+        
+        // Client Dashboard
+        dashboard: 'Tableau de bord',
+        welcome: 'Bienvenue',
+        clientDashboard: 'Espace Client',
+        recentProjects: 'Projets récents',
+        upcomingAppointments: 'Prochains rendez-vous',
+        recentQuotes: 'Derniers devis',
+        noProjects: 'Aucun projet pour le moment',
+        noAppointments: 'Aucun rendez-vous planifié',
+        viewAll: 'Voir tout',
+        delivered: 'Livré',
+        inProgress: 'En cours',
+        scheduleAppointment: 'Planifier un rendez-vous',
+        
+        // Projects
+        myProjects: 'Mes projets',
+        allProjects: 'Tous les projets',
+        projectDetails: 'Détails du projet',
+        technologies: 'Technologies utilisées',
+        projectLinks: 'Liens du projet',
+        liveDemo: 'Voir la démo live',
+        viewCode: 'Voir le code',
+        similarProject: 'Un projet similaire ?',
+        discussProject: 'Discutons de votre projet',
+        requestQuote: 'Demander un devis',
+        backToProjects: '← Retour aux projets',
+        projectNotFound: 'Projet introuvable',
+        
+        // Quotes
+        myQuotes: 'Mes devis',
+        allQuotes: 'Tous les devis',
+        quoteDetails: 'Détails du devis',
+        quoteTitle: 'Titre du devis',
+        description: 'Description',
+        budget: 'Budget',
+        deadline: 'Délai',
+        status: 'Statut',
+        pending: 'En attente',
+        approved: 'Approuvé',
+        rejected: 'Refusé',
+        draft: 'Brouillon',
+        
+        // Invoices
+        myInvoices: 'Mes factures',
+        allInvoices: 'Toutes les factures',
+        invoiceDetails: 'Détails de la facture',
+        invoiceNumber: 'Numéro de facture',
+        amount: 'Montant',
+        dueDate: 'Date d\'échéance',
+        paid: 'Payé',
+        overdue: 'En retard',
+        sent: 'Envoyé',
+        
+        // Contracts
+        myContracts: 'Mes contrats',
+        allContracts: 'Tous les contrats',
+        contractDetails: 'Détails du contrat',
+        contractTitle: 'Titre du contrat',
+        startDate: 'Date de début',
+        endDate: 'Date de fin',
+        signed: 'Signé',
+        cancelled: 'Annulé',
+        
+        // Appointments
+        myAppointments: 'Mes rendez-vous',
+        allAppointments: 'Tous les rendez-vous',
+        appointmentDetails: 'Détails du rendez-vous',
+        subject: 'Sujet',
+        scheduledAt: 'Date et heure',
+        meetingUrl: 'Lien de réunion',
+        confirmed: 'Confirmé',
+        completed: 'Terminé',
+        cancelled: 'Annulé',
+        
+        // Notifications
+        notifications: 'Notifications',
+        markAllAsRead: 'Tout marquer comme lu',
+        noNotifications: 'Aucune notification',
+        
+        // Settings
+        settings: 'Paramètres',
+        profile: 'Profil',
+        security: 'Sécurité',
+        profileInfo: 'Informations du profil',
+        changePassword: 'Changer le mot de passe',
+        currentPassword: 'Mot de passe actuel',
+        newPassword: 'Nouveau mot de passe',
+        confirmNewPassword: 'Confirmer le nouveau mot de passe',
+        save: 'Enregistrer',
+        passwordUpdated: 'Mot de passe modifié avec succès',
+        passwordMinLength: 'Minimum 8 caractères',
+        passwordsDoNotMatch: 'Les mots de passe ne correspondent pas',
+        
+        // Common
+        loading: 'Chargement…',
+        error: 'Erreur',
+        success: 'Succès',
+        cancel: 'Annuler',
+        delete: 'Supprimer',
+        edit: 'Modifier',
+        view: 'Voir',
+        download: 'Télécharger',
+        print: 'Imprimer',
+        search: 'Rechercher',
+        filter: 'Filtrer',
+        sort: 'Trier',
+        actions: 'Actions',
+        date: 'Date',
+        type: 'Type',
+        file: 'Fichier',
+        size: 'Taille',
+        format: 'Format',
+        
+        // Messages
+        messages: 'Messages',
+        sendMessage: 'Envoyer un message',
+        messageSent: 'Message envoyé avec succès',
+        
+        // Errors
+        unauthorized: 'Non autorisé',
+        forbidden: 'Accès interdit',
+        notFound: 'Page introuvable',
+        serverError: 'Erreur serveur',
+        networkError: 'Erreur réseau',
+        
+        // Footer
+        allRightsReserved: 'Tous droits réservés',
     },
     en: {
+        // Navigation
         home: 'Home',
         projects: 'Projects',
         services: 'Services',
@@ -57,7 +188,8 @@ export const translations = {
         team: 'Team',
         blog: 'Blog',
         contact: 'Contact',
-        requestQuote: 'Request a quote',
+        
+        // Auth
         login: 'Login',
         createAccount: 'Create account',
         mySpace: 'My space',
@@ -82,8 +214,137 @@ export const translations = {
         passwordResetSent: 'Reset code sent by email.',
         passwordResetSuccess: 'Password updated, you can now login.',
         backToSite: '← Back to site',
+        
+        // Client Dashboard
+        dashboard: 'Dashboard',
+        welcome: 'Welcome',
+        clientDashboard: 'Client Dashboard',
+        recentProjects: 'Recent projects',
+        upcomingAppointments: 'Upcoming appointments',
+        recentQuotes: 'Recent quotes',
+        noProjects: 'No projects yet',
+        noAppointments: 'No appointments scheduled',
+        viewAll: 'View all',
+        delivered: 'Delivered',
+        inProgress: 'In progress',
+        scheduleAppointment: 'Schedule appointment',
+        
+        // Projects
+        myProjects: 'My projects',
+        allProjects: 'All projects',
+        projectDetails: 'Project details',
+        technologies: 'Technologies used',
+        projectLinks: 'Project links',
+        liveDemo: 'View live demo',
+        viewCode: 'View code',
+        similarProject: 'Similar project?',
+        discussProject: 'Let\'s discuss your project',
+        requestQuote: 'Request a quote',
+        backToProjects: '← Back to projects',
+        projectNotFound: 'Project not found',
+        
+        // Quotes
+        myQuotes: 'My quotes',
+        allQuotes: 'All quotes',
+        quoteDetails: 'Quote details',
+        quoteTitle: 'Quote title',
+        description: 'Description',
+        budget: 'Budget',
+        deadline: 'Deadline',
+        status: 'Status',
+        pending: 'Pending',
+        approved: 'Approved',
+        rejected: 'Rejected',
+        draft: 'Draft',
+        
+        // Invoices
+        myInvoices: 'My invoices',
+        allInvoices: 'All invoices',
+        invoiceDetails: 'Invoice details',
+        invoiceNumber: 'Invoice number',
+        amount: 'Amount',
+        dueDate: 'Due date',
+        paid: 'Paid',
+        overdue: 'Overdue',
+        sent: 'Sent',
+        
+        // Contracts
+        myContracts: 'My contracts',
+        allContracts: 'All contracts',
+        contractDetails: 'Contract details',
+        contractTitle: 'Contract title',
+        startDate: 'Start date',
+        endDate: 'End date',
+        signed: 'Signed',
+        cancelled: 'Cancelled',
+        
+        // Appointments
+        myAppointments: 'My appointments',
+        allAppointments: 'All appointments',
+        appointmentDetails: 'Appointment details',
+        subject: 'Subject',
+        scheduledAt: 'Scheduled at',
+        meetingUrl: 'Meeting link',
+        confirmed: 'Confirmed',
+        completed: 'Completed',
+        cancelled: 'Cancelled',
+        
+        // Notifications
+        notifications: 'Notifications',
+        markAllAsRead: 'Mark all as read',
+        noNotifications: 'No notifications',
+        
+        // Settings
+        settings: 'Settings',
+        profile: 'Profile',
+        security: 'Security',
+        profileInfo: 'Profile information',
+        changePassword: 'Change password',
+        currentPassword: 'Current password',
+        newPassword: 'New password',
+        confirmNewPassword: 'Confirm new password',
+        save: 'Save',
+        passwordUpdated: 'Password updated successfully',
+        passwordMinLength: 'Minimum 8 characters',
+        passwordsDoNotMatch: 'Passwords do not match',
+        
+        // Common
+        loading: 'Loading…',
+        error: 'Error',
+        success: 'Success',
+        cancel: 'Cancel',
+        delete: 'Delete',
+        edit: 'Edit',
+        view: 'View',
+        download: 'Download',
+        print: 'Print',
+        search: 'Search',
+        filter: 'Filter',
+        sort: 'Sort',
+        actions: 'Actions',
+        date: 'Date',
+        type: 'Type',
+        file: 'File',
+        size: 'Size',
+        format: 'Format',
+        
+        // Messages
+        messages: 'Messages',
+        sendMessage: 'Send a message',
+        messageSent: 'Message sent successfully',
+        
+        // Errors
+        unauthorized: 'Unauthorized',
+        forbidden: 'Forbidden',
+        notFound: 'Page not found',
+        serverError: 'Server error',
+        networkError: 'Network error',
+        
+        // Footer
+        allRightsReserved: 'All rights reserved',
     },
     es: {
+        // Navigation
         home: 'Inicio',
         projects: 'Proyectos',
         services: 'Servicios',
@@ -94,11 +355,12 @@ export const translations = {
         team: 'Equipo',
         blog: 'Blog',
         contact: 'Contacto',
-        requestQuote: 'Pedir un presupuesto',
-        login: 'Connexion',
+        
+        // Auth
+        login: 'Iniciar sesión',
         createAccount: 'Crear cuenta',
         mySpace: 'Mi espacio',
-        email: 'Email',
+        email: 'Correo electrónico',
         password: 'Contraseña',
         confirmPassword: 'Confirmar contraseña',
         fullName: 'Nombre completo',
@@ -114,11 +376,139 @@ export const translations = {
         forgotPassword: '¿Olvidaste tu contraseña?',
         resetPassword: 'Restablecer contraseña',
         sendCode: 'Enviar código',
-        verifyEmail: 'Verificar mi email',
+        verifyEmail: 'Verificar mi correo',
         enterCode: 'Introduce el código OTP',
-        passwordResetSent: 'Código de restablecimiento enviado por email.',
+        passwordResetSent: 'Código de restablecimiento enviado por correo.',
         passwordResetSuccess: 'Contraseña actualizada, ya puedes iniciar sesión.',
         backToSite: '← Volver al sitio',
+        
+        // Client Dashboard
+        dashboard: 'Panel de control',
+        welcome: 'Bienvenido',
+        clientDashboard: 'Espacio Cliente',
+        recentProjects: 'Proyectos recientes',
+        upcomingAppointments: 'Próximas citas',
+        recentQuotes: 'Últimos presupuestos',
+        noProjects: 'Aún no hay proyectos',
+        noAppointments: 'No hay citas programadas',
+        viewAll: 'Ver todo',
+        delivered: 'Entregado',
+        inProgress: 'En progreso',
+        scheduleAppointment: 'Programar cita',
+        
+        // Projects
+        myProjects: 'Mis proyectos',
+        allProjects: 'Todos los proyectos',
+        projectDetails: 'Detalles del proyecto',
+        technologies: 'Tecnologías utilizadas',
+        projectLinks: 'Enlaces del proyecto',
+        liveDemo: 'Ver demo en vivo',
+        viewCode: 'Ver código',
+        similarProject: '¿Proyecto similar?',
+        discussProject: 'Hablemos de tu proyecto',
+        requestQuote: 'Solicitar presupuesto',
+        backToProjects: '← Volver a proyectos',
+        projectNotFound: 'Proyecto no encontrado',
+        
+        // Quotes
+        myQuotes: 'Mis presupuestos',
+        allQuotes: 'Todos los presupuestos',
+        quoteDetails: 'Detalles del presupuesto',
+        quoteTitle: 'Título del presupuesto',
+        description: 'Descripción',
+        budget: 'Presupuesto',
+        deadline: 'Fecha límite',
+        status: 'Estado',
+        pending: 'Pendiente',
+        approved: 'Aprobado',
+        rejected: 'Rechazado',
+        draft: 'Borrador',
+        
+        // Invoices
+        myInvoices: 'Mis facturas',
+        allInvoices: 'Todas las facturas',
+        invoiceDetails: 'Detalles de la factura',
+        invoiceNumber: 'Número de factura',
+        amount: 'Importe',
+        dueDate: 'Fecha de vencimiento',
+        paid: 'Pagado',
+        overdue: 'Vencido',
+        sent: 'Enviado',
+        
+        // Contracts
+        myContracts: 'Mis contratos',
+        allContracts: 'Todos los contratos',
+        contractDetails: 'Detalles del contrato',
+        contractTitle: 'Título del contrato',
+        startDate: 'Fecha de inicio',
+        endDate: 'Fecha de fin',
+        signed: 'Firmado',
+        cancelled: 'Cancelado',
+        
+        // Appointments
+        myAppointments: 'Mis citas',
+        allAppointments: 'Todas las citas',
+        appointmentDetails: 'Detalles de la cita',
+        subject: 'Asunto',
+        scheduledAt: 'Fecha y hora',
+        meetingUrl: 'Enlace de reunión',
+        confirmed: 'Confirmada',
+        completed: 'Completada',
+        cancelled: 'Cancelada',
+        
+        // Notifications
+        notifications: 'Notificaciones',
+        markAllAsRead: 'Marcar todo como leído',
+        noNotifications: 'Sin notificaciones',
+        
+        // Settings
+        settings: 'Configuración',
+        profile: 'Perfil',
+        security: 'Seguridad',
+        profileInfo: 'Información del perfil',
+        changePassword: 'Cambiar contraseña',
+        currentPassword: 'Contraseña actual',
+        newPassword: 'Nueva contraseña',
+        confirmNewPassword: 'Confirmar nueva contraseña',
+        save: 'Guardar',
+        passwordUpdated: 'Contraseña actualizada con éxito',
+        passwordMinLength: 'Mínimo 8 caracteres',
+        passwordsDoNotMatch: 'Las contraseñas no coinciden',
+        
+        // Common
+        loading: 'Cargando…',
+        error: 'Error',
+        success: 'Éxito',
+        cancel: 'Cancelar',
+        delete: 'Eliminar',
+        edit: 'Editar',
+        view: 'Ver',
+        download: 'Descargar',
+        print: 'Imprimir',
+        search: 'Buscar',
+        filter: 'Filtrar',
+        sort: 'Ordenar',
+        actions: 'Acciones',
+        date: 'Fecha',
+        type: 'Tipo',
+        file: 'Archivo',
+        size: 'Tamaño',
+        format: 'Formato',
+        
+        // Messages
+        messages: 'Mensajes',
+        sendMessage: 'Enviar un mensaje',
+        messageSent: 'Mensaje enviado con éxito',
+        
+        // Errors
+        unauthorized: 'No autorizado',
+        forbidden: 'Acceso prohibido',
+        notFound: 'Página no encontrada',
+        serverError: 'Error del servidor',
+        networkError: 'Error de red',
+        
+        // Footer
+        allRightsReserved: 'Todos los derechos reservados',
     },
 } as const
 

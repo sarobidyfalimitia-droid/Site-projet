@@ -48,7 +48,7 @@ npm run dev
 ```
 
 **Comptes de démo :**
-- Admin : `admin@techno-logia.fr` / `admin123`
+- Admin : `emittechno-logia@admin.fr` / `techno-logiaemit2000`
 - Client : `client@demo.fr` / `client123`
 
 ### 3. Frontend

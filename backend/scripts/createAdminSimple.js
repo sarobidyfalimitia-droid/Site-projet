@@ -5,8 +5,8 @@ async function main() {
     const prisma = new PrismaClient()
     
     try {
-        const email = 'admin@techno-logia.fr'
-        const password = 'admin123'
+        const email = 'emittechno-logia@admin.fr'
+        const password = 'techno-logiaemit2000'
         
         console.log('Création du compte admin...')
         console.log('Email:', email)
@@ -51,8 +51,8 @@ async function main() {
         
         console.log('\n📋 IDENTIFIANTS DE CONNEXION ADMIN:')
         console.log('===================================')
-        console.log('Email:    admin@techno-logia.fr')
-        console.log('Mot de passe: admin123')
+        console.log('Email:    emittechno-logia@admin.fr')
+        console.log('Mot de passe: techno-logiaemit2000')
         console.log('===================================')
         console.log('\n⚠️  IMPORTANT:')
         console.log('- Le champ refreshToken est vide (null) par défaut')

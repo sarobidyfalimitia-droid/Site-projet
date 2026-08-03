@@ -4,7 +4,7 @@ import { normalizeEmail, isOtpCodeValid } from '../src/utils/auth.utils'
 
 test('normalizeEmail trims and lowercases email addresses', () => {
     assert.equal(normalizeEmail('  User@Example.COM  '), 'user@example.com')
-    assert.equal(normalizeEmail('admin@techno-logia.fr'), 'admin@techno-logia.fr')
+    assert.equal(normalizeEmail('emittechno-logia@admin.fr'), 'emittechno-logia@admin.fr')
 })
 
 test('isOtpCodeValid accepts only six-digit codes', () => {

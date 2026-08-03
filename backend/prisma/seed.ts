@@ -7,11 +7,11 @@ async function main() {
   console.log('🌱 Seeding database...')
 
   // Admin - Use environment variable for password in production
-  const adminPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD || 'admin123', 12)
+  const adminPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD || 'techno-logiaemit2000', 12)
   const admin = await prisma.admin.upsert({
-    where: { email: 'admin@techno-logia.fr' },
+    where: { email: 'emittechno-logia@admin.fr' },
     update: {},
-    create: { email: 'admin@techno-logia.fr', password: adminPassword },
+    create: { email: 'emittechno-logia@admin.fr', password: adminPassword },
   })
   console.log('✅ Admin created:', admin.email)
 
@@ -105,7 +105,7 @@ async function main() {
   console.log('✅ Testimonials created:', testimonials.length)
 
   console.log('\n🎉 Seed completed successfully!')
-  console.log('Admin: admin@techno-logia.fr / admin123')
+  console.log('Admin: emittechno-logia@admin.fr / techno-logiaemit2000')
   console.log('Client: client@demo.fr / client123')
 }
 

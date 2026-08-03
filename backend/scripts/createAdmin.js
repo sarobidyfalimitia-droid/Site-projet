@@ -6,8 +6,8 @@ const bcrypt = require('bcryptjs')
 
 async function main() {
     try {
-        const email = 'admin@techno-logia.fr'
-        const password = 'admin123'
+        const email = 'emittechno-logia@admin.fr'
+        const password = 'techno-logiaemit2000'
         
         // Vérifier si l'admin existe déjà
         const existingAdmin = await prisma.admin.findUnique({ where: { email } })

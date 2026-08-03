@@ -15,13 +15,13 @@ router.get('/google/callback',
       
       // Générer les tokens JWT
       const accessToken = jwt.sign(
-        { id: user.id, email: user.email, role: user.role },
+        { id: user.id, email: user.email, name: user.name, role: user.role },
         process.env.JWT_SECRET || 'dev-secret',
         { expiresIn: '15m' }
       )
       
       const refreshToken = jwt.sign(
-        { id: user.id, email: user.email, role: user.role },
+        { id: user.id, email: user.email, name: user.name, role: user.role },
         process.env.JWT_REFRESH_SECRET || 'dev-refresh-secret',
         { expiresIn: '30d' }
       )

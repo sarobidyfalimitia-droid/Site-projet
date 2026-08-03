@@ -28,7 +28,7 @@ export default function AuthCallbackPage() {
         setUser({
           id: payload.id,
           email: payload.email,
-          name: payload.email, // Google ne fournit pas le nom dans le token
+          name: payload.name || payload.email, // Use name if available, otherwise email
           role: payload.role,
         })
         setTokens({ accessToken: token, refreshToken: refresh })

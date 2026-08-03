@@ -10,7 +10,7 @@
    - Fonctionne seulement pour le développement local
 
 2. **Vrai compte admin manquant**  
-   - Le compte `admin@techno-logia.fr` doit exister dans la base de données
+   - Le compte `emittechno-logia@admin.fr` doit exister dans la base de données
    - Le seed échoue à cause d'incohérences de schéma
 
 3. **Champ `refreshToken` doit être vide**  
@@ -24,8 +24,8 @@
 ## 🔑 Identifiants Admin par Défaut
 
 ```
-Email:    admin@techno-logia.fr
-Mot de passe: admin123
+Email:    emittechno-logia@admin.fr
+Mot de passe: techno-logiaemit2000
 ```
 
 **Champ important**: `refreshToken` doit être `NULL` (toujours vide)
@@ -63,10 +63,10 @@ Ou copiez-collez le contenu de `backend/scripts/createAdminSQL.sql`
    ```typescript
    // LIGNE 14: Enlever le champ 'name'
    const admin = await prisma.admin.upsert({
-     where: { email: 'admin@techno-logia.fr' },
+     where: { email: 'emittechno-logia@admin.fr' },
      update: {},
      create: { 
-       email: 'admin@techno-logia.fr', 
+       email: 'emittechno-logia@admin.fr', 
        password: adminPassword 
      },
    })
@@ -134,7 +134,7 @@ Ou copiez-collez le contenu de `backend/scripts/createAdminSQL.sql`
 ### Pour un Vrai Compte Admin
 1. **Démarrer PostgreSQL** sur `localhost:5432`
 2. **Exécuter le script SQL** ou **corriger le seed**
-3. **Utiliser les identifiants**: `admin@techno-logia.fr` / `admin123`
+3. **Utiliser les identifiants**: `emittechno-logia@admin.fr` / `techno-logiaemit2000`
 4. **Vérifier que** `refreshToken` est `NULL`
 
 ### Pour un Accès Rapide
@@ -149,6 +149,6 @@ Ou copiez-collez le contenu de `backend/scripts/createAdminSQL.sql`
 ---
 
 **Statut**: ✅ Solution complète fournie  
-**Identifiants**: `admin@techno-logia.fr` / `admin123`  
+**Identifiants**: `emittechno-logia@admin.fr` / `techno-logiaemit2000`  
 **Champ vide**: `refreshToken` (NULL)  
 **Accès rapide**: Bouton "Accès admin local" sur la page de login

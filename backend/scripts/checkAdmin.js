@@ -5,7 +5,7 @@ const prisma = new PrismaClient()
 
 async function main() {
     try {
-        const admin = await prisma.admin.findUnique({ where: { email: 'admin@techno-logia.fr' } });
+        const admin = await prisma.admin.findUnique({ where: { email: 'emittechno-logia@admin.fr' } });
         console.log('admin=', admin);
     } catch (e) {
         console.error('ERROR:', e.message);
