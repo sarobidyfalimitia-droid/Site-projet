@@ -109,7 +109,7 @@ export const translations = {
         startDate: 'Date de début',
         endDate: 'Date de fin',
         signed: 'Signé',
-        cancelled: 'Annulé',
+        contractCancelled: 'Annulé',
         
         // Appointments
         myAppointments: 'Mes rendez-vous',
@@ -120,7 +120,7 @@ export const translations = {
         meetingUrl: 'Lien de réunion',
         confirmed: 'Confirmé',
         completed: 'Terminé',
-        cancelled: 'Annulé',
+        appointmentCancelled: 'Annulé',
         
         // Notifications
         notifications: 'Notifications',
@@ -276,7 +276,7 @@ export const translations = {
         startDate: 'Start date',
         endDate: 'End date',
         signed: 'Signed',
-        cancelled: 'Cancelled',
+        contractCancelled: 'Cancelled',
         
         // Appointments
         myAppointments: 'My appointments',
@@ -287,7 +287,7 @@ export const translations = {
         meetingUrl: 'Meeting link',
         confirmed: 'Confirmed',
         completed: 'Completed',
-        cancelled: 'Cancelled',
+        appointmentCancelled: 'Cancelled',
         
         // Notifications
         notifications: 'Notifications',
@@ -443,7 +443,7 @@ export const translations = {
         startDate: 'Fecha de inicio',
         endDate: 'Fecha de fin',
         signed: 'Firmado',
-        cancelled: 'Cancelado',
+        contractCancelled: 'Cancelado',
         
         // Appointments
         myAppointments: 'Mis citas',
@@ -454,7 +454,7 @@ export const translations = {
         meetingUrl: 'Enlace de reunión',
         confirmed: 'Confirmada',
         completed: 'Completada',
-        cancelled: 'Cancelada',
+        appointmentCancelled: 'Cancelada',
         
         // Notifications
         notifications: 'Notificaciones',
